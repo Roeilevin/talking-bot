@@ -1,0 +1,41 @@
+import { config } from "./config";
+
+const BASE_URL = "https://ai.convertomessage.com/api/v1/whatsapp";
+
+export async function sendWhatsAppMessage(to: string, text: string): Promise<string> {
+  const res = await fetch(`${BASE_URL}/messages/text`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.converto.apiKey}`,
+    },
+    body: JSON.stringify({ to, text }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Converto API error: ${res.status} ${body}`);
+  }
+
+  const json = await res.json();
+  return json.message_id;
+}
+
+export function verifyConvertoSignature(
+  rawBody: string,
+  signature: string | null
+): boolean {
+  if (!signature || !config.converto.webhookSecret) return true; // skip if no secret configured
+
+  const crypto = require("node:crypto");
+  const expected =
+    "sha256=" +
+    crypto
+      .createHmac("sha256", config.converto.webhookSecret)
+      .update(rawBody, "utf8")
+      .digest("hex");
+
+  const a = Buffer.from(expected);
+  const b = Buffer.from(signature);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
