@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrderDetails } from "@/lib/bein-harim";
 import { sendWhatsAppMessage } from "@/lib/converto";
-import {
-  updateAssistantInstructions,
-  formatAssistantInstructions,
-  startCall,
-  formatPhoneNumber,
-} from "@/lib/telnyx";
+import { startAssistantCall } from "@/lib/telnyx";
 
 export async function POST(req: NextRequest) {
   try {
@@ -49,15 +44,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, reason: "tour_date_mismatch" });
     }
 
-    // Tour is today — update AI assistant and trigger call
-    const instructions = formatAssistantInstructions(order);
-    await updateAssistantInstructions(instructions);
-
-    const customerPhone = formatPhoneNumber(order.customer_phone);
-    const call = await startCall(customerPhone);
+    // Tour is today — trigger AI assistant call with order details as dynamic variables
+    const call = await startAssistantCall(order);
 
     console.log(
-      `[Call Started] Order ${orderNumber}, Customer: ${customerPhone}, Call Control ID: ${call.call_control_id}`
+      `[Call Started] Order ${orderNumber}, Customer: ${order.customer_phone}, Call Control ID: ${call.call_control_id}`
     );
 
     return NextResponse.json({ ok: true, call_control_id: call.call_control_id });
