@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { config } from "./config";
 
 const BASE_URL = "https://ai.convertomessage.com/api/v1/whatsapp";
@@ -25,9 +26,8 @@ export function verifyConvertoSignature(
   rawBody: string,
   signature: string | null
 ): boolean {
-  if (!signature || !config.converto.webhookSecret) return true; // skip if no secret configured
+  if (!signature || !config.converto.webhookSecret) return true;
 
-  const crypto = require("node:crypto");
   const expected =
     "sha256=" +
     crypto

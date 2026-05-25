@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrderDetails } from "@/lib/bein-harim";
-import { sendWhatsAppMessage } from "@/lib/converto";
+import { sendWhatsAppMessage, verifyConvertoSignature } from "@/lib/converto";
 import { startAssistantCall } from "@/lib/telnyx";
 
 export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text();
+
+    // Verify webhook signature
+    const signature = req.headers.get("X-Converto-Signature");
+    if (!verifyConvertoSignature(rawBody, signature)) {
+      return NextResponse.json({ error: "invalid_signature" }, { status: 401 });
+    }
+
     const body = JSON.parse(rawBody);
     const eventType = req.headers.get("X-Converto-Event");
 
