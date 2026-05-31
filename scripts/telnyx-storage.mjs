@@ -80,7 +80,12 @@ if (cmd === "list") {
   const res = await signedFetch("PUT", `/${arg}`);
   console.log("status", res.status);
   console.log(await res.text());
+} else if (cmd === "get") {
+  if (!arg) { console.error("need bucket/key path"); process.exit(1); }
+  const res = await signedFetch("GET", `/${arg}`);
+  console.log("status", res.status);
+  console.log(await res.text());
 } else {
-  console.error("commands: list | create <bucket>");
+  console.error("commands: list | create <bucket> | get <bucket/key>");
   process.exit(1);
 }
