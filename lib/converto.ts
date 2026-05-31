@@ -22,9 +22,11 @@ export async function sendWhatsAppMessage(to: string, text: string): Promise<str
   return json.message_id;
 }
 
-// Sends a status update to the guide / operations team WhatsApp number.
-export async function notifyOps(text: string): Promise<void> {
-  await sendWhatsAppMessage(config.opsWhatsAppNumber, text);
+// Sends a call status update to the team member who requested the call
+// (the WhatsApp number that texted the order number). Falls back to the
+// configured ops number if no recipient is provided.
+export async function notifyTeam(to: string | undefined, text: string): Promise<void> {
+  await sendWhatsAppMessage(to || config.opsWhatsAppNumber, text);
 }
 
 export function verifyConvertoSignature(

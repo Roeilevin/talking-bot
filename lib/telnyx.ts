@@ -20,17 +20,19 @@ function voiceIdForLanguage(languageCode: string): string {
 }
 
 export async function startAssistantCall(
-  order: OrderDetails
+  order: OrderDetails,
+  teamPhone: string
 ): Promise<{ call_control_id: string }> {
   const to = formatPhoneNumber(order.customer_phone);
 
-  // Carry order context in the StatusCallback query string so the Telnyx
-  // webhook can report unanswered calls to the ops team with full context.
+  // Carry order context + the requesting team member in the StatusCallback
+  // query string so the Telnyx webhook can report unanswered calls back to them.
   const customerName = `${order.customer_first_name} ${order.customer_last_name}`;
   const statusCallback =
     `${config.publicBaseUrl}/api/webhooks/telnyx` +
     `?order_number=${encodeURIComponent(order.order_number)}` +
-    `&customer_name=${encodeURIComponent(customerName)}`;
+    `&customer_name=${encodeURIComponent(customerName)}` +
+    `&team_phone=${encodeURIComponent(teamPhone)}`;
 
   const res = await fetch(
     `https://api.telnyx.com/v2/texml/ai_calls/${config.telnyx.callControlAppId}`,
@@ -58,6 +60,7 @@ export async function startAssistantCall(
           language_name: order.guide_language_name,
           language_code: order.guide_language_code,
           voice_id: voiceIdForLanguage(order.guide_language_code),
+          team_phone: teamPhone,
         },
       }),
     }

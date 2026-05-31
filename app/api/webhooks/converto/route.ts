@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrderDetails } from "@/lib/bein-harim";
-import { sendWhatsAppMessage, notifyOps, verifyConvertoSignature } from "@/lib/converto";
+import { sendWhatsAppMessage, notifyTeam, verifyConvertoSignature } from "@/lib/converto";
 import { startAssistantCall } from "@/lib/telnyx";
 
 export async function POST(req: NextRequest) {
@@ -51,15 +51,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true, reason: "tour_date_mismatch" });
     }
 
-    // Tour is today — trigger AI assistant call with order details as dynamic variables
-    const call = await startAssistantCall(order);
+    // Tour is today — trigger AI assistant call with order details as dynamic
+    // variables. Status updates go back to whoever requested the call.
+    const call = await startAssistantCall(order, senderPhone);
 
     console.log(
       `[Call Started] Order ${orderNumber}, Customer: ${order.customer_phone}, Call Control ID: ${call.call_control_id}`
     );
 
     const customerName = `${order.customer_first_name} ${order.customer_last_name}`;
-    await notifyOps(
+    await notifyTeam(
+      senderPhone,
       `📞 הזמנה ${orderNumber} – ${customerName}: מתקשרים ללקוח.\n` +
         `סיור ${order.tour_date}, איסוף ${order.pickup_hotel} ${order.pickup_city} בשעה ${order.pickup_time}.`
     );

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { notifyOps } from "@/lib/converto";
+import { notifyTeam } from "@/lib/converto";
 
 // Receives the per-call TeXML StatusCallback. Order context is carried in the
 // query string (set in startAssistantCall) so we can tell the ops team which
@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
     const params = req.nextUrl.searchParams;
     const orderNumber = params.get("order_number") || "";
     const customerName = params.get("customer_name") || "";
+    const teamPhone = params.get("team_phone") || undefined;
 
     // TeXML status callbacks are form-encoded; call-control events are JSON.
     let callStatus = "";
@@ -32,9 +33,9 @@ export async function POST(req: NextRequest) {
     const who = `הזמנה ${orderNumber}${customerName ? ` – ${customerName}` : ""}`;
 
     if (["no-answer", "busy", "failed", "canceled"].includes(callStatus)) {
-      await notifyOps(`📵 ${who}: הלקוח לא ענה לשיחה (${callStatus}).`);
+      await notifyTeam(teamPhone, `📵 ${who}: הלקוח לא ענה לשיחה (${callStatus}).`);
     } else if (callStatus === "completed" && answeredBy.startsWith("machine")) {
-      await notifyOps(`📭 ${who}: התקבל מענה אוטומטי / תא קולי.`);
+      await notifyTeam(teamPhone, `📭 ${who}: התקבל מענה אוטומטי / תא קולי.`);
     }
 
     return NextResponse.json({ ok: true });

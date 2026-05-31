@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { markOrderNoShow } from "@/lib/bein-harim";
-import { notifyOps } from "@/lib/converto";
+import { notifyTeam } from "@/lib/converto";
 
 // Called by Telnyx AI assistant webhook tool to mark an order as no-show,
 // then notify the guide / operations team.
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const body = raw ? JSON.parse(raw) : {};
     console.log("[Tool: mark-noshow]", body);
 
-    const { order_id, customer_name } = body;
+    const { order_id, customer_name, team_phone } = body;
 
     if (!order_id) {
       return NextResponse.json(
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     await markOrderNoShow(Number(order_id));
 
     const who = `הזמנה ${order_id}${customer_name ? ` – ${customer_name}` : ""}`;
-    await notifyOps(`❌ ${who}: סומן כאי-הגעה (no-show).`);
+    await notifyTeam(team_phone, `❌ ${who}: סומן כאי-הגעה (no-show).`);
 
     return NextResponse.json({ ok: true, message: `Order ${order_id} marked as no-show` });
   } catch (err) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { notifyOps } from "@/lib/converto";
+import { notifyTeam } from "@/lib/converto";
 
 // Called by the Telnyx AI assistant to update the guide / operations team
 // about the outcome of a customer call. Messages are composed here so they
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     const body = raw ? JSON.parse(raw) : {};
     console.log("[Tool: notify-team]", body);
 
-    const { order_id, customer_name, event, eta, note } = body;
+    const { order_id, customer_name, event, eta, note, team_phone } = body;
 
     if (!order_id || !event) {
       return NextResponse.json(
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         message = `ℹ️ ${who}: ${note || event}`;
     }
 
-    await notifyOps(message);
+    await notifyTeam(team_phone, message);
 
     return NextResponse.json({ ok: true, message: "Team notified" });
   } catch (err) {
