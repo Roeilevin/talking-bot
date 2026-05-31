@@ -14,6 +14,11 @@ export const config = {
     phoneNumber: process.env.CONVERTO_PHONE_NUMBER || "+972526588834",
     webhookSecret: process.env.CONVERTO_WEBHOOK_SECRET || "",
   },
+  // WhatsApp number of the guide / operations team that receives call status updates
+  opsWhatsAppNumber:
+    process.env.OPS_WHATSAPP_NUMBER ||
+    process.env.CONVERTO_PHONE_NUMBER ||
+    "972526588834",
   transferPhoneNumber: process.env.TRANSFER_PHONE_NUMBER || "972504425422",
   publicBaseUrl: process.env.PUBLIC_BASE_URL || "http://localhost:3000",
 } as const;

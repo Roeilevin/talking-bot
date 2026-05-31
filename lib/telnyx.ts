@@ -24,6 +24,14 @@ export async function startAssistantCall(
 ): Promise<{ call_control_id: string }> {
   const to = formatPhoneNumber(order.customer_phone);
 
+  // Carry order context in the StatusCallback query string so the Telnyx
+  // webhook can report unanswered calls to the ops team with full context.
+  const customerName = `${order.customer_first_name} ${order.customer_last_name}`;
+  const statusCallback =
+    `${config.publicBaseUrl}/api/webhooks/telnyx` +
+    `?order_number=${encodeURIComponent(order.order_number)}` +
+    `&customer_name=${encodeURIComponent(customerName)}`;
+
   const res = await fetch(
     `https://api.telnyx.com/v2/texml/ai_calls/${config.telnyx.callControlAppId}`,
     {
@@ -36,6 +44,9 @@ export async function startAssistantCall(
         To: to,
         From: config.telnyx.phoneNumber,
         AIAssistantId: config.telnyx.assistantId,
+        StatusCallback: statusCallback,
+        StatusCallbackMethod: "POST",
+        StatusCallbackEvent: ["completed"],
         AIAssistantDynamicVariables: {
           order_number: String(order.order_number),
           customer_name: `${order.customer_first_name} ${order.customer_last_name}`,

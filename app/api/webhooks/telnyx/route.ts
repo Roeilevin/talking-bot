@@ -1,27 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
+import { notifyOps } from "@/lib/converto";
 
+// Receives the per-call TeXML StatusCallback. Order context is carried in the
+// query string (set in startAssistantCall) so we can tell the ops team which
+// customer didn't pick up. Answered-call outcomes (coming / no-show /
+// transferred) are reported by the AI assistant tools, not here.
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const eventType = body.event_type || body.data?.event_type;
-    console.log(`[Telnyx Webhook] Event: ${eventType}`, JSON.stringify(body, null, 2));
+    const params = req.nextUrl.searchParams;
+    const orderNumber = params.get("order_number") || "";
+    const customerName = params.get("customer_name") || "";
 
-    // Handle call status events as needed
-    switch (eventType) {
-      case "call.initiated":
-        console.log("[Telnyx] Call initiated");
-        break;
-      case "call.answered":
-        console.log("[Telnyx] Call answered");
-        break;
-      case "call.hangup":
-        console.log("[Telnyx] Call ended");
-        break;
-      case "call.machine.greeting.ended":
-        console.log("[Telnyx] Machine detected");
-        break;
-      default:
-        console.log(`[Telnyx] Unhandled event: ${eventType}`);
+    // TeXML status callbacks are form-encoded; call-control events are JSON.
+    let callStatus = "";
+    let answeredBy = "";
+    const contentType = req.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      const body = await req.json();
+      callStatus = body.CallStatus || body.data?.payload?.state || "";
+      answeredBy = body.AnsweredBy || "";
+    } else {
+      const form = await req.formData();
+      callStatus = String(form.get("CallStatus") || "");
+      answeredBy = String(form.get("AnsweredBy") || "");
+    }
+
+    console.log(
+      `[Telnyx Webhook] order=${orderNumber} status=${callStatus} answeredBy=${answeredBy}`
+    );
+
+    const who = `הזמנה ${orderNumber}${customerName ? ` – ${customerName}` : ""}`;
+
+    if (["no-answer", "busy", "failed", "canceled"].includes(callStatus)) {
+      await notifyOps(`📵 ${who}: הלקוח לא ענה לשיחה (${callStatus}).`);
+    } else if (callStatus === "completed" && answeredBy.startsWith("machine")) {
+      await notifyOps(`📭 ${who}: התקבל מענה אוטומטי / תא קולי.`);
     }
 
     return NextResponse.json({ ok: true });

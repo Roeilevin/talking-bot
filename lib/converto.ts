@@ -22,6 +22,11 @@ export async function sendWhatsAppMessage(to: string, text: string): Promise<str
   return json.message_id;
 }
 
+// Sends a status update to the guide / operations team WhatsApp number.
+export async function notifyOps(text: string): Promise<void> {
+  await sendWhatsAppMessage(config.opsWhatsAppNumber, text);
+}
+
 export function verifyConvertoSignature(
   rawBody: string,
   signature: string | null

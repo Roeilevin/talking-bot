@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrderDetails } from "@/lib/bein-harim";
-import { sendWhatsAppMessage, verifyConvertoSignature } from "@/lib/converto";
+import { sendWhatsAppMessage, notifyOps, verifyConvertoSignature } from "@/lib/converto";
 import { startAssistantCall } from "@/lib/telnyx";
 
 export async function POST(req: NextRequest) {
@@ -56,6 +56,12 @@ export async function POST(req: NextRequest) {
 
     console.log(
       `[Call Started] Order ${orderNumber}, Customer: ${order.customer_phone}, Call Control ID: ${call.call_control_id}`
+    );
+
+    const customerName = `${order.customer_first_name} ${order.customer_last_name}`;
+    await notifyOps(
+      `📞 הזמנה ${orderNumber} – ${customerName}: מתקשרים ללקוח.\n` +
+        `סיור ${order.tour_date}, איסוף ${order.pickup_hotel} ${order.pickup_city} בשעה ${order.pickup_time}.`
     );
 
     return NextResponse.json({ ok: true, call_control_id: call.call_control_id });
