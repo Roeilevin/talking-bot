@@ -6,7 +6,8 @@ import { config } from "@/lib/config";
 // with the customer's ETA or other info
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const raw = await req.text();
+    const body = raw ? JSON.parse(raw) : {};
     console.log("[Tool: send-whatsapp]", body);
 
     const { to, text } = body;
