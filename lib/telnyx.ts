@@ -48,7 +48,7 @@ export async function startAssistantCall(
         AIAssistantId: config.telnyx.assistantId,
         StatusCallback: statusCallback,
         StatusCallbackMethod: "POST",
-        StatusCallbackEvent: ["completed"],
+        StatusCallbackEvent: "completed",
         AIAssistantDynamicVariables: {
           order_number: String(order.order_number),
           customer_name: `${order.customer_first_name} ${order.customer_last_name}`,
@@ -72,7 +72,10 @@ export async function startAssistantCall(
   }
 
   const json = await res.json();
-  return { call_control_id: json.data?.call_control_id || json.call_control_id };
+  return {
+    call_control_id:
+      json.call_sid || json.data?.call_control_id || json.call_control_id,
+  };
 }
 
 export function formatPhoneNumber(phone: string): string {
