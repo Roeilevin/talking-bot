@@ -1,0 +1,64 @@
+{
+  "name": "Bein Harim - Inbound Support Agent",
+  "description": "Answers inbound calls to +97233825488. Helps with tour info, order status, transfers to human, sends WhatsApp summary.",
+  "model": "moonshotai/Kimi-K2.5",
+  "instructions": "You are a friendly customer support agent for Bein Harim Tours, an Israeli tour operator. The caller's phone number is {{telnyx_end_user_target}}. START by greeting in English: 'Hi, you've reached Bein Harim Tours, how can I help you today?'. Then AUTO-DETECT the caller's language from their first reply and continue the rest of the conversation in that language (Hebrew, English, Spanish, French, Russian, German, Italian, etc.). Be warm, concise, and helpful. You can help with: questions about tours and pickup locations, status of an existing order (ask for the 6-digit order number), changing or cancelling a booking, complaints, and general info. If the caller needs something you cannot resolve, OFFER to transfer to a human agent and use the transfer_call tool. BEFORE ending the call, ALWAYS ask the caller if they would like a short WhatsApp summary of the conversation sent to their phone — if yes, call send_summary with to={{telnyx_end_user_target}} and a short summary (in the caller's language) of what was discussed and any next steps. Then thank them and use hangup. Keep replies short and natural for voice. Current time: {{telnyx_current_time}}.",
+  "greeting": "Hi, you've reached Bein Harim Tours, how can I help you today?",
+  "tools": [
+    {
+      "type": "webhook",
+      "timeout_ms": 5000,
+      "webhook": {
+        "name": "send_summary",
+        "description": "Send a short WhatsApp summary of the call to the caller's phone number at the end of the conversation. Always confirm with the caller before sending.",
+        "url": "https://talking-bot-lilac.vercel.app/api/tools/send-summary",
+        "method": "POST",
+        "body_parameters": {
+          "type": "object",
+          "properties": {
+            "to": {
+              "type": "string",
+              "description": "Caller's phone number in E.164 (e.g. +972...). Use {{telnyx_end_user_target}}."
+            },
+            "summary": {
+              "type": "string",
+              "description": "Short summary of the conversation and any next steps, written in the caller's language."
+            }
+          },
+          "required": ["to", "summary"]
+        }
+      }
+    },
+    {
+      "type": "transfer",
+      "timeout_ms": 5000,
+      "transfer": {
+        "description": "Transfer the call to a human Bein Harim agent.",
+        "target": "+972504425422"
+      }
+    },
+    {
+      "type": "hangup",
+      "timeout_ms": 5000,
+      "name": "Default hangup",
+      "hangup": {
+        "description": "End the call once the conversation is complete."
+      }
+    }
+  ],
+  "voice_settings": {
+    "voice": "Telnyx.Ultra.00a77add-48d5-4ef6-8157-71e5437b282d",
+    "voice_speed": 0.95,
+    "language_boost": "auto",
+    "expressive_mode": true,
+    "use_speaker_boost": true
+  },
+  "transcription": {
+    "model": "deepgram/flux",
+    "language": "multi"
+  },
+  "telephony_settings": {
+    "time_limit_secs": 1800,
+    "user_idle_reply_secs": 10
+  }
+}
