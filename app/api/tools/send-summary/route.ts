@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendWhatsAppMessage } from "@/lib/converto";
+import { sendWhatsAppTemplate } from "@/lib/converto";
 
 // Called by the inbound AI assistant at the end of a support call to send
 // a short WhatsApp summary to the caller (or fall back to ops).
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     const normalized = String(to).replace(/[^0-9]/g, "");
-    await sendWhatsAppMessage(normalized, summary);
+    await sendWhatsAppTemplate(normalized, "call_summary", [summary]);
 
     return NextResponse.json({ ok: true });
   } catch (err) {

@@ -22,6 +22,43 @@ export async function sendWhatsAppMessage(to: string, text: string): Promise<str
   return json.message_id;
 }
 
+// WhatsApp forbids newlines/tabs and long space runs inside template variables.
+function sanitizeParam(v: unknown): string {
+  return String(v ?? "").replace(/\s+/g, " ").trim();
+}
+
+// Sends a pre-approved WhatsApp template. Required for business-initiated
+// messages (no open 24h session), e.g. messaging a caller after a phone call.
+// params map positionally to the template's {{1}}, {{2}}, ... placeholders.
+export async function sendWhatsAppTemplate(
+  to: string,
+  templateName: string,
+  params: string[],
+  language = "en_US"
+): Promise<string> {
+  const res = await fetch(`${BASE_URL}/messages/template`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.converto.apiKey}`,
+    },
+    body: JSON.stringify({
+      to,
+      template_name: templateName,
+      language,
+      params: params.map(sanitizeParam),
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Converto template API error: ${res.status} ${body}`);
+  }
+
+  const json = await res.json();
+  return json.message_id;
+}
+
 // Sends a call status update to the team member who requested the call
 // (the WhatsApp number that texted the order number). Falls back to the
 // configured ops number if no recipient is provided.

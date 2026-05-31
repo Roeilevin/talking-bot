@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendWhatsAppMessage } from "@/lib/converto";
+import { sendWhatsAppTemplate } from "@/lib/converto";
 import { config } from "@/lib/config";
 
 // Inbound assistant tool: caller has a custom / group / church tour inquiry.
@@ -28,8 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const lines = [
-      "📋 New tour inquiry (from inbound call)",
+    const fields = [
       inquiry_type ? `Type: ${inquiry_type}` : null,
       tour_details ? `Tour: ${tour_details}` : null,
       preferred_dates ? `Dates: ${preferred_dates}` : null,
@@ -40,7 +39,9 @@ export async function POST(req: NextRequest) {
       notes ? `Notes: ${notes}` : null,
     ].filter(Boolean);
 
-    await sendWhatsAppMessage(config.opsWhatsAppNumber, lines.join("\n"));
+    await sendWhatsAppTemplate(config.opsWhatsAppNumber, "inbound_inquiry", [
+      fields.join("; "),
+    ]);
 
     return NextResponse.json({
       ok: true,

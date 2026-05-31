@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getOrderDetails } from "@/lib/bein-harim";
-import { sendWhatsAppMessage } from "@/lib/converto";
+import { sendWhatsAppTemplate } from "@/lib/converto";
 import { buildMapsLink, isPickupPassed } from "@/lib/pickup";
 
 // Inbound assistant tool: caller can't find the pickup point.
@@ -47,12 +47,11 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const text =
-      `Bein Harim Tours – your pickup point:\n` +
-      `${order.pickup_hotel}, ${order.pickup_city}\n` +
-      `Pickup time: ${order.pickup_time}\n` +
-      `Map: ${mapsLink}`;
-    await sendWhatsAppMessage(to, text);
+    await sendWhatsAppTemplate(to, "pickup_location", [
+      `${order.pickup_hotel}, ${order.pickup_city}`,
+      order.pickup_time,
+      mapsLink,
+    ]);
 
     return NextResponse.json({
       action: "sent",
