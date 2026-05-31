@@ -7,7 +7,7 @@ export async function startAssistantCall(
   const to = formatPhoneNumber(order.customer_phone);
 
   const res = await fetch(
-    `https://api.telnyx.com/v2/ai/assistants/${config.telnyx.assistantId}/calls`,
+    `https://api.telnyx.com/v2/texml/ai_calls/${config.telnyx.callControlAppId}`,
     {
       method: "POST",
       headers: {
@@ -15,9 +15,10 @@ export async function startAssistantCall(
         Authorization: `Bearer ${config.telnyx.apiKey}`,
       },
       body: JSON.stringify({
-        to,
-        from: config.telnyx.phoneNumber,
-        dynamic_variables: {
+        To: to,
+        From: config.telnyx.phoneNumber,
+        AIAssistantId: config.telnyx.assistantId,
+        AIAssistantDynamicVariables: {
           order_number: String(order.order_number),
           customer_name: `${order.customer_first_name} ${order.customer_last_name}`,
           customer_phone: to,
