@@ -108,3 +108,22 @@ export function findTour(query: string): TourMatch {
   }
   return { match: best.t, score: best.s, byNumber: false, suggestions: suggestions.slice(1) };
 }
+
+// Bein Harim affiliate id appended to every tour link we hand out, so bookings
+// are attributed. Override with BH_AFFILIATE_ID; set to "" to disable.
+export const AFFILIATE_ID =
+  process.env.BH_AFFILIATE_ID !== undefined ? process.env.BH_AFFILIATE_ID : "2909";
+
+// Append the affiliate code to a tour URL, preserving the trailing slash and any
+// existing query params.
+export function affiliateUrl(url: string, affiliateId: string = AFFILIATE_ID): string {
+  if (!affiliateId) return url;
+  try {
+    const u = new URL(url);
+    u.searchParams.set("affiliate_id", affiliateId);
+    return u.toString();
+  } catch {
+    const sep = url.includes("?") ? "&" : "?";
+    return `${url}${sep}affiliate_id=${encodeURIComponent(affiliateId)}`;
+  }
+}

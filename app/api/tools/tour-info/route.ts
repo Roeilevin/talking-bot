@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendWhatsAppTemplate } from "@/lib/converto";
-import { findTour } from "@/lib/tours";
+import { findTour, affiliateUrl } from "@/lib/tours";
 
 // Inbound assistant tool: caller asks about a specific tour/product.
 // Resolve the tour (by name or number) and WhatsApp the caller a card with
@@ -30,21 +30,23 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    const url = affiliateUrl(match.url);
+
     const to = String(caller_phone || "").replace(/[^0-9]/g, "");
     if (!to) {
       return NextResponse.json({
         action: "no_phone",
-        tour: { number: match.number, name: match.name, url: match.url },
+        tour: { number: match.number, name: match.name, url },
         message:
           "Found the tour but could not determine the caller's WhatsApp number. Ask the caller for a WhatsApp number to send the tour details to.",
       });
     }
 
-    await sendWhatsAppTemplate(to, "tour_info", [match.name, match.number, match.url]);
+    await sendWhatsAppTemplate(to, "tour_info", [match.name, match.number, url]);
 
     return NextResponse.json({
       action: "sent",
-      tour: { number: match.number, name: match.name, url: match.url },
+      tour: { number: match.number, name: match.name, url },
       message: `Sent the details for "${match.name}" (tour number ${match.number}) to the caller on WhatsApp. Let them know it's on its way and ask if they need anything else. Do not read the URL out loud.`,
     });
   } catch (err) {
