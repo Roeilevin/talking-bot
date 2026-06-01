@@ -1,0 +1,194 @@
+[
+  {
+    "id": "1",
+    "name": "Jerusalem"
+  },
+  {
+    "id": "2",
+    "name": "Tel Aviv"
+  },
+  {
+    "id": "3",
+    "name": "Ramat Gan"
+  },
+  {
+    "id": "4",
+    "name": "Netanya"
+  },
+  {
+    "id": "5",
+    "name": "Herzliya"
+  },
+  {
+    "id": "7",
+    "name": "Bet Shemesh"
+  },
+  {
+    "id": "11",
+    "name": "Rishon Leziyon"
+  },
+  {
+    "id": "12",
+    "name": "Petach Tikva"
+  },
+  {
+    "id": "14",
+    "name": "Beer Sheva"
+  },
+  {
+    "id": "16",
+    "name": "Holon"
+  },
+  {
+    "id": "23",
+    "name": "Sderot"
+  },
+  {
+    "id": "25",
+    "name": "Bethlehem"
+  },
+  {
+    "id": "35",
+    "name": "Eilat"
+  },
+  {
+    "id": "37",
+    "name": "Haifa"
+  },
+  {
+    "id": "41",
+    "name": "Modiin"
+  },
+  {
+    "id": "44",
+    "name": "Caesarea"
+  },
+  {
+    "id": "50",
+    "name": "Tiberias"
+  },
+  {
+    "id": "60",
+    "name": "Ein Gedi"
+  },
+  {
+    "id": "61",
+    "name": "Hadera"
+  },
+  {
+    "id": "67",
+    "name": "Lod"
+  },
+  {
+    "id": "72",
+    "name": "Maale Adumim"
+  },
+  {
+    "id": "73",
+    "name": "Zichron Yaakov"
+  },
+  {
+    "id": "79",
+    "name": "Karmiel"
+  },
+  {
+    "id": "80",
+    "name": "Kiryat Gat"
+  },
+  {
+    "id": "104",
+    "name": "Dead Sea"
+  },
+  {
+    "id": "113",
+    "name": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "116",
+    "name": "Kedumim"
+  },
+  {
+    "id": "131",
+    "name": "Nazareth"
+  },
+  {
+    "id": "141",
+    "name": "Nahariya"
+  },
+  {
+    "id": "151",
+    "name": "Binyamina"
+  },
+  {
+    "id": "172",
+    "name": "Jericho"
+  },
+  {
+    "id": "173",
+    "name": "Judean Desert"
+  },
+  {
+    "id": "175",
+    "name": "Sea of Galilee"
+  },
+  {
+    "id": "176",
+    "name": "Acre"
+  },
+  {
+    "id": "178",
+    "name": "Galilee"
+  },
+  {
+    "id": "179",
+    "name": "Safed"
+  },
+  {
+    "id": "180",
+    "name": "Petra"
+  },
+  {
+    "id": "181",
+    "name": "Aqaba"
+  },
+  {
+    "id": "186",
+    "name": "Amman"
+  },
+  {
+    "id": "191",
+    "name": "Sea of Galilee"
+  },
+  {
+    "id": "192",
+    "name": "Golan Heights"
+  },
+  {
+    "id": "195",
+    "name": "Wadi Rum"
+  },
+  {
+    "id": "196",
+    "name": "Golan / Galilee"
+  },
+  {
+    "id": "199",
+    "name": "Jerash"
+  },
+  {
+    "id": "201",
+    "name": "Haifa District"
+  },
+  {
+    "id": "202",
+    "name": "South"
+  },
+  {
+    "id": "204",
+    "name": "Center"
+  },
+  {
+    "id": "205",
+    "name": "West Bank"
+  }
+]

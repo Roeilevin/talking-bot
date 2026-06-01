@@ -1,0 +1,27 @@
+[
+  {
+    "id": "1",
+    "short_name": "en",
+    "full_name": "English"
+  },
+  {
+    "id": "2",
+    "short_name": "fr",
+    "full_name": "French"
+  },
+  {
+    "id": "3",
+    "short_name": "es",
+    "full_name": "Spanish"
+  },
+  {
+    "id": "4",
+    "short_name": "ru",
+    "full_name": "Russian"
+  },
+  {
+    "id": "6",
+    "short_name": "ger",
+    "full_name": "German"
+  }
+]

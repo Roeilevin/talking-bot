@@ -1,0 +1,3182 @@
+[
+  {
+    "id": "407",
+    "name": "Madaba Map",
+    "area_id": "144",
+    "area": ""
+  },
+  {
+    "id": "328",
+    "name": "Acre Aqueduct",
+    "area_id": "176",
+    "area": "Acre"
+  },
+  {
+    "id": "122",
+    "name": "Acre Old City Market",
+    "area_id": "176",
+    "area": "Acre"
+  },
+  {
+    "id": "356",
+    "name": "Acre Port",
+    "area_id": "176",
+    "area": "Acre"
+  },
+  {
+    "id": "317",
+    "name": "Al-Jazzar Mosque, Acre",
+    "area_id": "176",
+    "area": "Acre"
+  },
+  {
+    "id": "316",
+    "name": "The Ramchal Synagogue, Acre",
+    "area_id": "176",
+    "area": "Acre"
+  },
+  {
+    "id": "90",
+    "name": "The Templars' Tunnel",
+    "area_id": "176",
+    "area": "Acre"
+  },
+  {
+    "id": "315",
+    "name": "Turkish Hammam, Acre",
+    "area_id": "176",
+    "area": "Acre"
+  },
+  {
+    "id": "254",
+    "name": "Underground Crusader City Acre",
+    "area_id": "176",
+    "area": "Acre"
+  },
+  {
+    "id": "482",
+    "name": "Ajloun Castle",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "479",
+    "name": "Al Balad – Downtown Amman",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "487",
+    "name": "Amman Citadel",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "481",
+    "name": "Kerak Castle",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "478",
+    "name": "King Abdullah I Mosque, Amman",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "477",
+    "name": "King Hussein Mosque, Amman",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "486",
+    "name": "Roman Theatre, Amman",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "484",
+    "name": "Royal Automobile Museum, Amman",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "480",
+    "name": "St. John the Baptist Roman Catholic Church, Madaba",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "483",
+    "name": "The Jordan Museum",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "485",
+    "name": "Wadi al Mujib",
+    "area_id": "186",
+    "area": "Amman"
+  },
+  {
+    "id": "497",
+    "name": "Aqaba",
+    "area_id": "181",
+    "area": "Aqaba"
+  },
+  {
+    "id": "490",
+    "name": "Aqaba Fortress (Mamluk Castle)",
+    "area_id": "181",
+    "area": "Aqaba"
+  },
+  {
+    "id": "491",
+    "name": "Gulf of Aqaba",
+    "area_id": "181",
+    "area": "Aqaba"
+  },
+  {
+    "id": "229",
+    "name": "Ein Evrona",
+    "area_id": "14",
+    "area": "Beer Sheva"
+  },
+  {
+    "id": "311",
+    "name": "Mitzpe Ramon",
+    "area_id": "14",
+    "area": "Beer Sheva"
+  },
+  {
+    "id": "373",
+    "name": "Beit Jamal Monastery",
+    "area_id": "7",
+    "area": "Bet Shemesh"
+  },
+  {
+    "id": "400",
+    "name": "Valley of Elah - Tel Azekah",
+    "area_id": "7",
+    "area": "Bet Shemesh"
+  },
+  {
+    "id": "581",
+    "name": "Banksy Graffiti",
+    "area_id": "25",
+    "area": "Bethlehem"
+  },
+  {
+    "id": "56",
+    "name": "Church of Nativity",
+    "area_id": "25",
+    "area": "Bethlehem"
+  },
+  {
+    "id": "253",
+    "name": "Church of St. Catherine",
+    "area_id": "25",
+    "area": "Bethlehem"
+  },
+  {
+    "id": "59",
+    "name": "Manger Square",
+    "area_id": "25",
+    "area": "Bethlehem"
+  },
+  {
+    "id": "60",
+    "name": "Shepherds Fields Church",
+    "area_id": "25",
+    "area": "Bethlehem"
+  },
+  {
+    "id": "395",
+    "name": "Jabotinsky Shuni Park - Israel's Wine Region",
+    "area_id": "151",
+    "area": "Binyamina"
+  },
+  {
+    "id": "313",
+    "name": "Park Alona - Mei Kedem Ancient Roman Water System",
+    "area_id": "151",
+    "area": "Binyamina"
+  },
+  {
+    "id": "431",
+    "name": "Ralli Museums, Caesarea",
+    "area_id": "44",
+    "area": "Caesarea"
+  },
+  {
+    "id": "117",
+    "name": "Roman Capital, Caesarea",
+    "area_id": "44",
+    "area": "Caesarea"
+  },
+  {
+    "id": "120",
+    "name": "Theater of Caesarea",
+    "area_id": "44",
+    "area": "Caesarea"
+  },
+  {
+    "id": "172",
+    "name": "Alexander Stream National Park",
+    "area_id": "204",
+    "area": "Center"
+  },
+  {
+    "id": "179",
+    "name": "Apollonia National Park",
+    "area_id": "204",
+    "area": "Center"
+  },
+  {
+    "id": "175",
+    "name": "Yarkon National Park",
+    "area_id": "204",
+    "area": "Center"
+  },
+  {
+    "id": "132",
+    "name": "Ahava Factory",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "238",
+    "name": "Aynot Tzukim",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "40",
+    "name": "Dead Sea",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "278",
+    "name": "Ein Bokek",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "61",
+    "name": "Ein Gedi Nature Reserve",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "86",
+    "name": "Ein Gedi- Baths",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "310",
+    "name": "Einot Tzukim",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "186",
+    "name": "Enot Tsukim",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "183",
+    "name": "Good Samaritan Museum",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "27",
+    "name": "Kalia Beach",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "24",
+    "name": "Masada",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "133",
+    "name": "Metsuke Dragot",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "437",
+    "name": "Mount Sodom",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "187",
+    "name": "Qasr al-Yahud",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "62",
+    "name": "Qumran",
+    "area_id": "104",
+    "area": "Dead Sea"
+  },
+  {
+    "id": "394",
+    "name": "Dolphin Reef Eilat",
+    "area_id": "35",
+    "area": "Eilat"
+  },
+  {
+    "id": "142",
+    "name": "Eilat",
+    "area_id": "35",
+    "area": "Eilat"
+  },
+  {
+    "id": "182",
+    "name": "Eilat Coral Beach",
+    "area_id": "35",
+    "area": "Eilat"
+  },
+  {
+    "id": "181",
+    "name": "Hay-Bar Yotvata",
+    "area_id": "35",
+    "area": "Eilat"
+  },
+  {
+    "id": "359",
+    "name": "Timna Valley Park",
+    "area_id": "35",
+    "area": "Eilat"
+  },
+  {
+    "id": "124",
+    "name": "Oasis of Ein Gedi",
+    "area_id": "60",
+    "area": "Ein Gedi"
+  },
+  {
+    "id": "217",
+    "name": "Akhziv National Park",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "214",
+    "name": "Amud Stream",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "245",
+    "name": "Atsmon Mountain",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "198",
+    "name": "Ayun Stream Nature Reserve",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "195",
+    "name": "Baram National Park",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "193",
+    "name": "Beit Shean National Park",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "268",
+    "name": "Church of Mensa Christi",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "326",
+    "name": "Ein Dor Archaeological Museum",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "166",
+    "name": "Franciscan Church",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "207",
+    "name": "Gan HaShlosha (Sahne)",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "247",
+    "name": "HaGilbo'a Reserve",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "381",
+    "name": "Hamat Gader",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "199",
+    "name": "Hamat Tiberias National Park",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "426",
+    "name": "Horns of Hattin",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "219",
+    "name": "Horshat Tal",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "325",
+    "name": "House of Marzipan and Chocolate, Kfar Tabor",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "213",
+    "name": "Hula",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "242",
+    "name": "Hurvat Amudim",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "329",
+    "name": "Keshet Cave, Natural Stone Arch",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "200",
+    "name": "Kochav HaYarden",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "197",
+    "name": "Korazim National Park",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "340",
+    "name": "Kziv River",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "82",
+    "name": "Magdala",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "63",
+    "name": "Megiddo",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "330",
+    "name": "Monfort Fortress Observation Point",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "79",
+    "name": "Mount Bental",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "81",
+    "name": "Mount Meron",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "73",
+    "name": "Mount Tabor",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "248",
+    "name": "Nahal Ayoun",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "76",
+    "name": "Rosh HaNikra",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "202",
+    "name": "Snir Stream",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "267",
+    "name": "Synagogue Church",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "324",
+    "name": "Tabor Winery",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "204",
+    "name": "Tel Hazor",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "327",
+    "name": "The Holocaust Museum (The Ghetto Fighters' House)",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "92",
+    "name": "Tsipori park",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "134",
+    "name": "Tzaddikim Graves, Tiberias",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "167",
+    "name": "Wedding Church Cana",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "203",
+    "name": "Yehiam Fortress",
+    "area_id": "178",
+    "area": "Galilee"
+  },
+  {
+    "id": "415",
+    "name": "Mount Betarim",
+    "area_id": "196",
+    "area": "Golan / Galilee"
+  },
+  {
+    "id": "161",
+    "name": "Ancient Synagogue of Katzrin",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "93",
+    "name": "Banias Nature Reserve",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "137",
+    "name": "Birkat Ram",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "210",
+    "name": "Gamla",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "194",
+    "name": "Kursi National Park",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "208",
+    "name": "Majrase",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "201",
+    "name": "Meshushim Stream",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "250",
+    "name": "Mitzpe Gadot",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "209",
+    "name": "Mount Arbel",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "396",
+    "name": "Mount Hermon",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "95",
+    "name": "Nimrod Fortress",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "391",
+    "name": "Shaar HaGolan",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "398",
+    "name": "Shalom Observatory",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "162",
+    "name": "Syrian Fortification",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "97",
+    "name": "Talmudic Village of Katzrin",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "94",
+    "name": "Tel Dan Reserve",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "376",
+    "name": "Umm el-Kanatir Synagogue (Ein Keshatot)",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "196",
+    "name": "Yehudiya Forest",
+    "area_id": "192",
+    "area": "Golan Heights"
+  },
+  {
+    "id": "180",
+    "name": "Sea Turtle Rescue Center",
+    "area_id": "61",
+    "area": "Hadera"
+  },
+  {
+    "id": "75",
+    "name": "Bahai Gardens",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "98",
+    "name": "Beit She'arim National Park",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "119",
+    "name": "Caesarea Port",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "157",
+    "name": "Daliat-el-Carmel",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "218",
+    "name": "Ein Afek",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "331",
+    "name": "Ein Hod",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "155",
+    "name": "German Colony, Haifa",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "220",
+    "name": "Hai-Bar Carmel",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "314",
+    "name": "HaMizgaga Museum of Archaeology and Glass, Nachsholim",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "352",
+    "name": "Hecht Museum",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "121",
+    "name": "Mount Carmel",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "156",
+    "name": "Muhraka Monastery, Haifa",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "192",
+    "name": "Nahal Mearot",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "428",
+    "name": "Nesher Park",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "447",
+    "name": "Stella Maris Monastery",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "243",
+    "name": "Tel Megiddo",
+    "area_id": "37",
+    "area": "Haifa"
+  },
+  {
+    "id": "451",
+    "name": "Atlit Detainee Camp Museum",
+    "area_id": "201",
+    "area": "Haifa District"
+  },
+  {
+    "id": "23",
+    "name": "Caesarea National Park",
+    "area_id": "201",
+    "area": "Haifa District"
+  },
+  {
+    "id": "275",
+    "name": "Carmel National Park",
+    "area_id": "201",
+    "area": "Haifa District"
+  },
+  {
+    "id": "215",
+    "name": "Dor HaBonim Beach",
+    "area_id": "201",
+    "area": "Haifa District"
+  },
+  {
+    "id": "212",
+    "name": "Taninim Stream",
+    "area_id": "201",
+    "area": "Haifa District"
+  },
+  {
+    "id": "357",
+    "name": "Tel Dor",
+    "area_id": "201",
+    "area": "Haifa District"
+  },
+  {
+    "id": "399",
+    "name": "Herzliya Marina",
+    "area_id": "5",
+    "area": "Herzliya"
+  },
+  {
+    "id": "384",
+    "name": "Design Museum Holon",
+    "area_id": "16",
+    "area": "Holon"
+  },
+  {
+    "id": "544",
+    "name": "The Blind Museum Holon",
+    "area_id": "16",
+    "area": "Holon"
+  },
+  {
+    "id": "541",
+    "name": "The Israel Childrens Museum",
+    "area_id": "16",
+    "area": "Holon"
+  },
+  {
+    "id": "502",
+    "name": "Fountain \"Zodiac Signs\"",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "507",
+    "name": "HaMidron Garden",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "505",
+    "name": "HaPisga Garden",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "378",
+    "name": "Ilana Goor Museum",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "262",
+    "name": "Jaffa Flea Market",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "504",
+    "name": "Ramses II's Gate Garden",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "501",
+    "name": "St. Peter's Church",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "503",
+    "name": "Suspended Orange Tree",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "499",
+    "name": "The Clock Tower",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "506",
+    "name": "Wishing Bridge",
+    "area_id": "113",
+    "area": "Jaffa (Yaffo)"
+  },
+  {
+    "id": "102",
+    "name": "Jerash",
+    "area_id": "199",
+    "area": "Jerash"
+  },
+  {
+    "id": "455",
+    "name": "Jerash Ruins",
+    "area_id": "199",
+    "area": "Jerash"
+  },
+  {
+    "id": "252",
+    "name": "Elisha's spring",
+    "area_id": "172",
+    "area": "Jericho"
+  },
+  {
+    "id": "349",
+    "name": "Herod’s Palace at Jericho",
+    "area_id": "172",
+    "area": "Jericho"
+  },
+  {
+    "id": "112",
+    "name": "Mount of Temptation",
+    "area_id": "172",
+    "area": "Jericho"
+  },
+  {
+    "id": "109",
+    "name": "Oasis of Jericho",
+    "area_id": "172",
+    "area": "Jericho"
+  },
+  {
+    "id": "111",
+    "name": "Tel Jericho",
+    "area_id": "172",
+    "area": "Jericho"
+  },
+  {
+    "id": "110",
+    "name": "Zacchaeus Sycamore Tree Jericho",
+    "area_id": "172",
+    "area": "Jericho"
+  },
+  {
+    "id": "286",
+    "name": "Adam's Chapel",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "453",
+    "name": "Akeldama and St. Onuphrius Monastery",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "290",
+    "name": "Al-Aqsa Mosque",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "309",
+    "name": "Ammunition Hill",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "58",
+    "name": "Armenian Quarter",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "417",
+    "name": "Augusta Victoria Hospital",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "205",
+    "name": "Bet Alfa Synagogue",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "351",
+    "name": "Bethphage",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "342",
+    "name": "Bible Lands Museum",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "385",
+    "name": "Bloomfield Science Museum, Jerusalem",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "379",
+    "name": "Broad Wall",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "32",
+    "name": "Byzantine Cardo",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "281",
+    "name": "Calvary - Golgotha",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "171",
+    "name": "Castel National Park",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "389",
+    "name": "Cathedral of Saint James, Jerusalem",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "403",
+    "name": "Chagall Windows at Hadassah University Medical Center",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "288",
+    "name": "Chapel of Saint Helena",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "99",
+    "name": "Chapel of the Ascension, Mount of Olives",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "168",
+    "name": "Christian Quarter",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "47",
+    "name": "Church of All Nations",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "302",
+    "name": "Church of Mary Magdalene",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "304",
+    "name": "Church of Saint Peter in Gallicantu",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "284",
+    "name": "Church of St. Alexander Nevsky",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "52",
+    "name": "Church of St. Anne",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "37",
+    "name": "Church of the Holy Sepulchre",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "305",
+    "name": "Church of the Visitation",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "46",
+    "name": "City of David",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "280",
+    "name": "Damascus Gate",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "416",
+    "name": "Deir Es-Sultan",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "269",
+    "name": "Dome of the Rock",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "50",
+    "name": "Dominus Flevit Church",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "318",
+    "name": "Dormition Abbey, Jerusalem",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "45",
+    "name": "Dung Gate",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "355",
+    "name": "Ecce Homo Arch",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "287",
+    "name": "Edicule (the tomb of Jesus Christ)",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "173",
+    "name": "Ein Hemed",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "138",
+    "name": "Ein Kerem",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "188",
+    "name": "Ein Prat",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "191",
+    "name": "Euthemius Monastery",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "276",
+    "name": "First Station",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "31",
+    "name": "Garden of Gethsemane",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "432",
+    "name": "German Colony, Jerusalem",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "401",
+    "name": "Gihon Spring",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "241",
+    "name": "Ha-Masrek Reserve",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "348",
+    "name": "Haas Promenade",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "299",
+    "name": "Hecht Synagogue",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "307",
+    "name": "Herod's gate",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "291",
+    "name": "Herod's Gate (Flowers Gate)",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "185",
+    "name": "Herodion Park",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "383",
+    "name": "Israel Aquarium",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "337",
+    "name": "Israel Defense Forces cemetery",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "91",
+    "name": "Israel Museum",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "321",
+    "name": "Israeli Supreme Court Building",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "439",
+    "name": "Italian Synagogue, Jerusalem",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "271",
+    "name": "Jaffa Gate",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "336",
+    "name": "Jerusalem Biblical Zoo",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "292",
+    "name": "Jerusalem British war cemetery",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "33",
+    "name": "Jewish Quarter",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "41",
+    "name": "King David’s tomb",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "444",
+    "name": "Kishle - Turkish prison",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "303",
+    "name": "Knesset",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "51",
+    "name": "Lion’s Gate",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "445",
+    "name": "Little Western Wall",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "277",
+    "name": "Mahane Yehuda",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "413",
+    "name": "Mamilla",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "319",
+    "name": "Mea Shearim Ultra-Orthodox Neighborhood",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "53",
+    "name": "Milk Grotto",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "264",
+    "name": "Mini Israel",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "335",
+    "name": "Mishkenot Shaananim",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "353",
+    "name": "Monastery of the Cross",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "369",
+    "name": "Montefiore Windmill",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "419",
+    "name": "Mosque of Omar",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "297",
+    "name": "Mount Herzl",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "114",
+    "name": "Mount of Olives",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "256",
+    "name": "Mount Scopus",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "115",
+    "name": "Mount Zion",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "411",
+    "name": "Muristan",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "265",
+    "name": "Museum and Memorial at Latrun (Yad Lashirion)",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "372",
+    "name": "Museum for Islamic Art",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "450",
+    "name": "Museum on the Seam",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "116",
+    "name": "Muslim Quarter",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "184",
+    "name": "Nabi Samuel Park",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "438",
+    "name": "Nahon Museum of Italian Jewish Art",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "308",
+    "name": "New Gate",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "130",
+    "name": "Notre Dam De Sion",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "425",
+    "name": "Notre Dame of Jerusalem Center",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "279",
+    "name": "Old City Walls",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "333",
+    "name": "Ophel Promenade",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "129",
+    "name": "Pater Noster Church",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "163",
+    "name": "Pool of Bethesda",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "301",
+    "name": "Pool of Siloam",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "285",
+    "name": "Rock of Calvary",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "341",
+    "name": "Rockefeller Archaeological Museum",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "42",
+    "name": "Room of the Last Supper",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "44",
+    "name": "Sephardi synagogues",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "366",
+    "name": "Siebenberg House, Jerusalem",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "176",
+    "name": "Stalactite Caves",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "36",
+    "name": "Stations of the Cross",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "298",
+    "name": "Tabachnik National Garden",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "54",
+    "name": "Temple Mount",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "454",
+    "name": "Terra Sancta Museum",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "295",
+    "name": "The Burnt House Museum",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "282",
+    "name": "The Church of Saint John the Baptist",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "55",
+    "name": "The Convent of the Sisters of Zion",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "101",
+    "name": "The Davidson Center",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "334",
+    "name": "The Garden Tomb",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "289",
+    "name": "The Golden Gate",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "293",
+    "name": "The Hurva Synagogue",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "283",
+    "name": "The Lutheran Church of the Redeemer",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "323",
+    "name": "The Mount of Olives Jewish Cemetery",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "294",
+    "name": "The Nea Church (New Church of the Theotokos)",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "358",
+    "name": "The Old City Ramparts, Jerusalem",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "296",
+    "name": "The Ramparts Museum",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "100",
+    "name": "The Roof of the Austrian Hospice",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "322",
+    "name": "The Russian Ascension Church",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "382",
+    "name": "The Second Temple",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "354",
+    "name": "The Struthion Pool",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "270",
+    "name": "The Suk (The Market)",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "89",
+    "name": "The Western Wall Tunnels",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "371",
+    "name": "Time Elevator",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "434",
+    "name": "Tomb of Absalom",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "435",
+    "name": "Tomb of Benei Hezir",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "339",
+    "name": "Tomb of Mary",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "306",
+    "name": "Tomb of the Virgin Mary",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "436",
+    "name": "Tomb of Zechariah",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "312",
+    "name": "Tower of David Museum",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "448",
+    "name": "Valley of Hinnom",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "35",
+    "name": "Via Dolorosa",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "430",
+    "name": "Viri Galilaei Church",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "237",
+    "name": "Wadi Kelt",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "34",
+    "name": "Western Wall (Kotel)",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "380",
+    "name": "Wohl Museum of Archaeology - Herodian Quarter",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "38",
+    "name": "Yad VaShem Holocaust Museum",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "370",
+    "name": "Zedekiah's Cave",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "43",
+    "name": "Zion Gate",
+    "area_id": "1",
+    "area": "Jerusalem"
+  },
+  {
+    "id": "125",
+    "name": "Judean Desert",
+    "area_id": "173",
+    "area": "Judean Desert"
+  },
+  {
+    "id": "235",
+    "name": "Nahal Darga Canyon",
+    "area_id": "173",
+    "area": "Judean Desert"
+  },
+  {
+    "id": "246",
+    "name": "tel yodefet",
+    "area_id": "79",
+    "area": "Karmiel"
+  },
+  {
+    "id": "236",
+    "name": "nahal kane",
+    "area_id": "116",
+    "area": "Kedumim"
+  },
+  {
+    "id": "96",
+    "name": "Beit Guvrin-Maresha National Park",
+    "area_id": "80",
+    "area": "Kiryat Gat"
+  },
+  {
+    "id": "440",
+    "name": "Lachish",
+    "area_id": "80",
+    "area": "Kiryat Gat"
+  },
+  {
+    "id": "397",
+    "name": "Trappist monastery , Latrun",
+    "area_id": "67",
+    "area": "Lod"
+  },
+  {
+    "id": "338",
+    "name": "Mar Saba Monastery / Holy Lavra of Saint Sabbas",
+    "area_id": "72",
+    "area": "Maale Adumim"
+  },
+  {
+    "id": "393",
+    "name": "Neot Kedumim Park",
+    "area_id": "41",
+    "area": "Modiin"
+  },
+  {
+    "id": "332",
+    "name": "Ein Chardalit Spring",
+    "area_id": "141",
+    "area": "Nahariya"
+  },
+  {
+    "id": "343",
+    "name": "Beit Alpha Synagogue",
+    "area_id": "131",
+    "area": "Nazareth"
+  },
+  {
+    "id": "66",
+    "name": "Church of Annunciation",
+    "area_id": "131",
+    "area": "Nazareth"
+  },
+  {
+    "id": "127",
+    "name": "Church of St. Joseph",
+    "area_id": "131",
+    "area": "Nazareth"
+  },
+  {
+    "id": "449",
+    "name": "Church of the Transfiguration",
+    "area_id": "131",
+    "area": "Nazareth"
+  },
+  {
+    "id": "257",
+    "name": "Kfar Kana",
+    "area_id": "131",
+    "area": "Nazareth"
+  },
+  {
+    "id": "206",
+    "name": "Ma'ayan Harod",
+    "area_id": "131",
+    "area": "Nazareth"
+  },
+  {
+    "id": "65",
+    "name": "Mount of Precipitation",
+    "area_id": "131",
+    "area": "Nazareth"
+  },
+  {
+    "id": "240",
+    "name": "hof hasharon",
+    "area_id": "4",
+    "area": "Netanya"
+  },
+  {
+    "id": "433",
+    "name": "Yarkon-Tel Afek (Antipatris)",
+    "area_id": "12",
+    "area": "Petach Tikva"
+  },
+  {
+    "id": "103",
+    "name": "Amman",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "469",
+    "name": "Byzantine Church, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "495",
+    "name": "Djinn Blocks",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "467",
+    "name": "Great Temple, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "471",
+    "name": "High Place of Sacrifice, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "474",
+    "name": "Little Petra (Siq al-Barid)",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "598",
+    "name": "Madaba",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "139",
+    "name": "Madaba, Jordan",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "104",
+    "name": "Mount Nebo, Jordan",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "496",
+    "name": "Obelisk Tomb",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "464",
+    "name": "Palace Tomb, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "106",
+    "name": "Petra Archaeological Park",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "476",
+    "name": "Petra Museum",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "461",
+    "name": "Petra Theater (Nabatean Theatre)",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "470",
+    "name": "Qasr al-Bint",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "498",
+    "name": "Renaissance Tomb, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "475",
+    "name": "Royal Tombs, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "463",
+    "name": "Silk Tomb, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "460",
+    "name": "Street of Facades, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "468",
+    "name": "Temple of the Winged Lions",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "466",
+    "name": "The Colonnaded Street",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "472",
+    "name": "The Farsa Valley, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "473",
+    "name": "The Garden Temple, Petra",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "457",
+    "name": "The Monastery (Al Dayr)",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "599",
+    "name": "The Royal Tombs",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "465",
+    "name": "The Sextius Florentinus Tomb",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "458",
+    "name": "The Siq",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "459",
+    "name": "The Treasury (Al-Khazneh)",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "462",
+    "name": "The Urn Tomb (The Court)",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "456",
+    "name": "Tomb of the Roman Soldier",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "105",
+    "name": "Wadi Musa, Jordan",
+    "area_id": "180",
+    "area": "Petra"
+  },
+  {
+    "id": "540",
+    "name": "Oppenheimer Diamond Museum",
+    "area_id": "3",
+    "area": "Ramat Gan"
+  },
+  {
+    "id": "178",
+    "name": "Palmahim Beach National Park",
+    "area_id": "11",
+    "area": "Rishon Leziyon"
+  },
+  {
+    "id": "136",
+    "name": "Artists' Colony",
+    "area_id": "179",
+    "area": "Safed"
+  },
+  {
+    "id": "596",
+    "name": "Givat Kobi Lookout",
+    "area_id": "23",
+    "area": "Sderot"
+  },
+  {
+    "id": "583",
+    "name": "Netiv Haasara",
+    "area_id": "23",
+    "area": "Sderot"
+  },
+  {
+    "id": "406",
+    "name": "Bethsaida",
+    "area_id": "175",
+    "area": "Sea of Galilee"
+  },
+  {
+    "id": "452",
+    "name": "Church of the Apostles",
+    "area_id": "191",
+    "area": "Sea of Galilee"
+  },
+  {
+    "id": "374",
+    "name": "Church of the Primacy of St. Peter",
+    "area_id": "175",
+    "area": "Sea of Galilee"
+  },
+  {
+    "id": "69",
+    "name": "Mount of Beatitude",
+    "area_id": "175",
+    "area": "Sea of Galilee"
+  },
+  {
+    "id": "67",
+    "name": "Sea of Galilee",
+    "area_id": "175",
+    "area": "Sea of Galilee"
+  },
+  {
+    "id": "244",
+    "name": "Sirin",
+    "area_id": "175",
+    "area": "Sea of Galilee"
+  },
+  {
+    "id": "72",
+    "name": "Yardenit Bapstim Site",
+    "area_id": "175",
+    "area": "Sea of Galilee"
+  },
+  {
+    "id": "174",
+    "name": "Ashkelon National Park",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "234",
+    "name": "Avdat",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "151",
+    "name": "Bell Cave",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "427",
+    "name": "Ben Gurion’s Tomb",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "227",
+    "name": "Ben-Gurion’s Tomb",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "231",
+    "name": "Bitronot Be'eri",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "225",
+    "name": "Ein Avdat",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "584",
+    "name": "Erez Crossing",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "593",
+    "name": "Gaza Envelope",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "223",
+    "name": "HaBsor National Park",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "232",
+    "name": "irus yeruham",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "582",
+    "name": "Israel Gaza Border",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "590",
+    "name": "Kibbutz Be'Eri",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "587",
+    "name": "Kibbutz Kfar Aza",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "591",
+    "name": "Kibbutz Reim",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "588",
+    "name": "Kibbutz Saad",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "226",
+    "name": "Makhtesh Ramon",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "222",
+    "name": "Mamshit National Park",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "594",
+    "name": "Moshav Tekuma",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "230",
+    "name": "nahal shezaf",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "589",
+    "name": "Naẖal ‘Oz, Southern District, Israel",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "177",
+    "name": "Nitsanim Dunes",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "233",
+    "name": "Nitzana",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "597",
+    "name": "Nova Music Festival Memorial Site",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "592",
+    "name": "Ofakim",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "251",
+    "name": "Roman Theater, Beit Gubrin",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "585",
+    "name": "Sderot",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "586",
+    "name": "Sderot Police Station",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "224",
+    "name": "Shivta",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "228",
+    "name": "Tel Arad",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "221",
+    "name": "Tel Beer Sheva",
+    "area_id": "202",
+    "area": "South"
+  },
+  {
+    "id": "549",
+    "name": "Aden Jewish Heritage Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "529",
+    "name": "Adina Plastelina Jewelry",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "441",
+    "name": "Allenby Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "577",
+    "name": "Alma (Charles Clore) Beach",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "557",
+    "name": "American-German Colony",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "525",
+    "name": "Andromeda Rock",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "446",
+    "name": "Andromeda’s Rock",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "528",
+    "name": "ANU - Museum of the Jewish People",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "513",
+    "name": "Atarim square",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "575",
+    "name": "Banana beach",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "562",
+    "name": "Basel Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "402",
+    "name": "Bauhaus Center Tel Aviv",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "542",
+    "name": "Beit Hair Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "545",
+    "name": "Beit Ha’Ir Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "517",
+    "name": "Beit Lessin Theater",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "409",
+    "name": "Ben Gurion House, Tel Aviv",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "564",
+    "name": "Ben Yehuda Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "559",
+    "name": "Ben-Gurion Boulevard",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "408",
+    "name": "Bialik House, Tel Aviv",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "565",
+    "name": "Bialik Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "375",
+    "name": "Bloomfield Stadium",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "578",
+    "name": "Bograshov Beach",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "569",
+    "name": "Bograshov Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "263",
+    "name": "Carmel Market",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "551",
+    "name": "Center for Contemporary Art",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "552",
+    "name": "Center for Contemporary Art",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "508",
+    "name": "Charles Clore Park",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "260",
+    "name": "Diaspora Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "511",
+    "name": "Dizengoff Square",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "146",
+    "name": "Dizengoff Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "387",
+    "name": "Eretz Israel Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "531",
+    "name": "Etzel Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "536",
+    "name": "Eyal Ofer Pavilion for Contemporary Art",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "388",
+    "name": "Florentin",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "576",
+    "name": "Frishman Beach",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "364",
+    "name": "Gesher Theatre",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "573",
+    "name": "Gordon Beach",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "509",
+    "name": "Habima Square",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "169",
+    "name": "Hall of Independence",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "524",
+    "name": "HaMidron Garden",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "537",
+    "name": "Hanina Gallery",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "523",
+    "name": "HaPisga Garden (Abrasha Park)",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "392",
+    "name": "HaTachana (Jaffa Railway Station)",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "561",
+    "name": "Hayarkon Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "568",
+    "name": "Herzl Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "539",
+    "name": "Herzlilienblum Museum of Banking",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "574",
+    "name": "Hilton Beach",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "595",
+    "name": "Hostages Square",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "522",
+    "name": "House of Simon the Tanner",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "368",
+    "name": "Ibn Gabirol Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "530",
+    "name": "IDF History Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "547",
+    "name": "Jabotinsky Institute",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "144",
+    "name": "Jaffa Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "145",
+    "name": "Jaffa Port",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "521",
+    "name": "Jaffa Theatre",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "572",
+    "name": "Jerusalem Beach",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "548",
+    "name": "Joseph Bau House Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "555",
+    "name": "Kerem HaTeimanim(Yemenite Quarter)",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "514",
+    "name": "Kikar Hamedina",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "510",
+    "name": "Kikar Kedumim",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "346",
+    "name": "King George Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "567",
+    "name": "King George Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "532",
+    "name": "Lehi Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "518",
+    "name": "Lev Cinema",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "429",
+    "name": "Levinsky Market",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "443",
+    "name": "Liebling Haus White City Center",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "367",
+    "name": "Magen David Square",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "579",
+    "name": "Metsitsim Beach(Metzitzim)",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "362",
+    "name": "Montefiore Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "347",
+    "name": "Nachalat Binyamin Art Fair (Market)",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "563",
+    "name": "Nachmani Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "546",
+    "name": "Nahum Gutman Museum of Art",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "526",
+    "name": "Nalagaat Center",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "363",
+    "name": "Neve Tzedek",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "365",
+    "name": "New Israeli Opera",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "520",
+    "name": "Old Jaffa",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "512",
+    "name": "Opera Square",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "261",
+    "name": "Palmach Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "533",
+    "name": "Ramat Gan Museum of Israeli Art",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "272",
+    "name": "Ramat Gan National Park",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "273",
+    "name": "Ramat Gan Safari Park",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "558",
+    "name": "Ramat HaHayal",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "519",
+    "name": "Rav Chen Dizengoff",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "410",
+    "name": "Reuven Rubin House",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "147",
+    "name": "Rothschild Boulevard",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "566",
+    "name": "Rothschild Boulevard",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "550",
+    "name": "Rubin Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "274",
+    "name": "Sarona Market",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "560",
+    "name": "Sheinkin Street",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "516",
+    "name": "Shuk Ttzafon",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "553",
+    "name": "Sommer Contemporary Art",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "405",
+    "name": "Steinhardt Museum of Natural History",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "570",
+    "name": "Street Art Tel Aviv",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "361",
+    "name": "Suzanne Dellal Center",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "534",
+    "name": "Suzanne Dellal Centre for Dance and Theatre",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "344",
+    "name": "Tel Aviv Beach Promenade",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "556",
+    "name": "Tel Aviv Center",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "442",
+    "name": "Tel Aviv Cinematheque",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "571",
+    "name": "Tel Aviv Graffiti",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "320",
+    "name": "Tel Aviv Museum of Art",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "345",
+    "name": "Tel Aviv Port",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "515",
+    "name": "Tel Aviv Port Market",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "580",
+    "name": "Tel Aviv promenade (Tayelet)",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "386",
+    "name": "The Cameri Theatre",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "360",
+    "name": "The Habima Theatre",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "535",
+    "name": "The Hagana Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "148",
+    "name": "The Hall of Independence, Tel Aviv",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "554",
+    "name": "The Helena Rubinstein Pavilion",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "412",
+    "name": "Trumpeldor Cemetery",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "527",
+    "name": "Uri Geller Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "538",
+    "name": "Uri Geller Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "543",
+    "name": "Whiskey Bar & Museum",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "414",
+    "name": "Yemenite Quarter",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "404",
+    "name": "Yitzhak Rabin Center",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "149",
+    "name": "Yitzhak Rabin Square",
+    "area_id": "2",
+    "area": "Tel Aviv"
+  },
+  {
+    "id": "165",
+    "name": "Ancient Fisherman's boat (might be Jesus boat), Ginosar",
+    "area_id": "50",
+    "area": "Tiberias"
+  },
+  {
+    "id": "70",
+    "name": "Capernaum",
+    "area_id": "50",
+    "area": "Tiberias"
+  },
+  {
+    "id": "160",
+    "name": "Church of Multiplication- Tabgha",
+    "area_id": "50",
+    "area": "Tiberias"
+  },
+  {
+    "id": "128",
+    "name": "Tiberias",
+    "area_id": "50",
+    "area": "Tiberias"
+  },
+  {
+    "id": "258",
+    "name": "Tomb of Maimonides (Rabbi Moshe Ben Maimon)",
+    "area_id": "50",
+    "area": "Tiberias"
+  },
+  {
+    "id": "259",
+    "name": "Tomb of Rabbi Meir Baal HaNes",
+    "area_id": "50",
+    "area": "Tiberias"
+  },
+  {
+    "id": "494",
+    "name": "Red and yellow Sand dunes",
+    "area_id": "195",
+    "area": "Wadi Rum"
+  },
+  {
+    "id": "492",
+    "name": "Seven Pillars of Wisdom",
+    "area_id": "195",
+    "area": "Wadi Rum"
+  },
+  {
+    "id": "493",
+    "name": "Um Fruth rock bridge",
+    "area_id": "195",
+    "area": "Wadi Rum"
+  },
+  {
+    "id": "107",
+    "name": "Wadi Rum",
+    "area_id": "195",
+    "area": "Wadi Rum"
+  },
+  {
+    "id": "422",
+    "name": "Cave of the Patriarchs",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "424",
+    "name": "Joseph's Tomb",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "189",
+    "name": "Mount Gerizim",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "390",
+    "name": "Nabi Musa (Tomb of Moses)",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "423",
+    "name": "Oak of Mamre",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "421",
+    "name": "Rachel's Tomb",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "190",
+    "name": "Sebastia",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "300",
+    "name": "St. George's Monastery",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "418",
+    "name": "Tel Balata",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "239",
+    "name": "Wadi Khureitun",
+    "area_id": "205",
+    "area": "West Bank"
+  },
+  {
+    "id": "153",
+    "name": "Beit NILI",
+    "area_id": "73",
+    "area": "Zichron Yaakov"
+  },
+  {
+    "id": "154",
+    "name": "Local Winery, Zichron",
+    "area_id": "73",
+    "area": "Zichron Yaakov"
+  },
+  {
+    "id": "152",
+    "name": "Zichron Ya’akov",
+    "area_id": "73",
+    "area": "Zichron Yaakov"
+  }
+]
