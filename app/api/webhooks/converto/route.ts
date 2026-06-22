@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getOrderDetails } from "@/lib/bein-harim";
 import { sendWhatsAppMessage, notifyTeam, verifyConvertoSignature } from "@/lib/converto";
 import { startAssistantCall } from "@/lib/telnyx";
+import { insertCall } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -60,6 +61,19 @@ export async function POST(req: NextRequest) {
     );
 
     const customerName = `${order.customer_first_name} ${order.customer_last_name}`;
+
+    // Record the call (and the originating 6-digit WhatsApp message via
+    // originating_phone + order_number + created_at). Best-effort; never throws.
+    await insertCall({
+      call_control_id: call.call_control_id,
+      order_number: orderNumber,
+      originating_phone: senderPhone,
+      customer_name: customerName,
+      customer_phone: order.customer_phone,
+      status: "placed",
+      tour_date: order.tour_date,
+    });
+
     await notifyTeam(
       senderPhone,
       `📞 הזמנה ${orderNumber} – ${customerName}: מתקשרים ללקוח.\n` +

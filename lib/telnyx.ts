@@ -78,6 +78,148 @@ export async function startAssistantCall(
   };
 }
 
+// ---- Telnyx AI Conversations API (read-only, for the dashboard) ----
+// Telnyx stores each AI conversation server-side. We pull transcripts lazily by
+// call_control_id (outbound) or conversation id (inbound). Every helper is
+// error-safe and returns null/[] so it can never affect the live call flow.
+
+const TELNYX_API = "https://api.telnyx.com/v2";
+
+export interface TranscriptMessage {
+  role: string;
+  content: string;
+  timestamp: string | null;
+}
+
+export interface InboundConversation {
+  id: string;
+  caller: string | null;
+  assistantId: string | null;
+  createdAt: string | null;
+  lastMessageAt: string | null;
+}
+
+async function telnyxGet(path: string): Promise<unknown | null> {
+  if (!config.telnyx.apiKey) return null;
+  try {
+    const res = await fetch(`${TELNYX_API}${path}`, {
+      headers: {
+        Authorization: `Bearer ${config.telnyx.apiKey}`,
+        Accept: "application/json",
+      },
+    });
+    if (!res.ok) {
+      console.error(`[telnyx] GET ${path} -> ${res.status}`);
+      return null;
+    }
+    return await res.json();
+  } catch (e) {
+    console.error(`[telnyx] GET ${path} failed`, e);
+    return null;
+  }
+}
+
+// Telnyx response lists live under `data`; tolerate a couple of shapes.
+function asList(json: unknown): Record<string, unknown>[] {
+  if (!json || typeof json !== "object") return [];
+  const obj = json as Record<string, unknown>;
+  const candidate = obj.data ?? obj.conversations ?? obj.messages;
+  return Array.isArray(candidate) ? (candidate as Record<string, unknown>[]) : [];
+}
+
+function metaOf(row: Record<string, unknown>): Record<string, unknown> {
+  const m = row.metadata;
+  return m && typeof m === "object" ? (m as Record<string, unknown>) : {};
+}
+
+export async function getConversationByCallControlId(
+  callControlId: string
+): Promise<string | null> {
+  if (!callControlId) return null;
+  const json = await telnyxGet(
+    `/ai/conversations?metadata->call_control_id=eq.${encodeURIComponent(
+      callControlId
+    )}`
+  );
+  const row = asList(json)[0];
+  return row && typeof row.id === "string" ? row.id : null;
+}
+
+function normalizeMessage(
+  m: Record<string, unknown>
+): TranscriptMessage | null {
+  if (!m || typeof m !== "object") return null;
+  const role = String(m.role ?? m.sender ?? "unknown").toLowerCase();
+  let content = "";
+  if (typeof m.content === "string") content = m.content;
+  else if (Array.isArray(m.content))
+    content = (m.content as unknown[])
+      .map((c) =>
+        typeof c === "string"
+          ? c
+          : String((c as Record<string, unknown>)?.text ?? "")
+      )
+      .join(" ");
+  else content = String(m.text ?? "");
+  content = content.trim();
+  if (!content) return null;
+  const ts = m.sent_at ?? m.created_at ?? m.timestamp ?? null;
+  return { role, content, timestamp: typeof ts === "string" ? ts : null };
+}
+
+export async function getTranscript(
+  conversationId: string
+): Promise<TranscriptMessage[]> {
+  if (!conversationId) return [];
+  const json = await telnyxGet(
+    `/ai/conversations/${encodeURIComponent(conversationId)}/messages`
+  );
+  return asList(json)
+    .map(normalizeMessage)
+    .filter((m): m is TranscriptMessage => m !== null)
+    .sort((a, b) => (a.timestamp ?? "").localeCompare(b.timestamp ?? ""));
+}
+
+export async function getTranscriptByCallControlId(
+  callControlId: string
+): Promise<TranscriptMessage[]> {
+  const id = await getConversationByCallControlId(callControlId);
+  return id ? getTranscript(id) : [];
+}
+
+// Recent inbound support conversations. Filtered to the inbound assistant when
+// TELNYX_INBOUND_ASSISTANT_ID is configured; otherwise lists recent conversations.
+export async function listInboundConversations(
+  limit = 50
+): Promise<InboundConversation[]> {
+  const params = new URLSearchParams();
+  params.set("order", "created_at.desc");
+  params.set("limit", String(Math.max(1, Math.min(limit, 200))));
+  let query = `/ai/conversations?${params.toString()}`;
+  if (config.telnyx.inboundAssistantId) {
+    query += `&metadata->assistant_id=eq.${encodeURIComponent(
+      config.telnyx.inboundAssistantId
+    )}`;
+  }
+  const json = await telnyxGet(query);
+  return asList(json)
+    .filter((row) => typeof row.id === "string")
+    .map((row) => {
+      const meta = metaOf(row);
+      const caller =
+        meta.telnyx_end_user_target ?? meta.caller ?? meta.from ?? null;
+      const assistantId = meta.assistant_id ?? null;
+      return {
+        id: String(row.id),
+        caller: typeof caller === "string" ? caller : null,
+        assistantId: typeof assistantId === "string" ? assistantId : null,
+        createdAt: typeof row.created_at === "string" ? row.created_at : null,
+        lastMessageAt:
+          typeof row.last_message_at === "string" ? row.last_message_at : null,
+      };
+    });
+}
+
 export function formatPhoneNumber(phone: string): string {
   const digits = phone.replace(/\D/g, "");
   if (digits.startsWith("972") || digits.startsWith("1") || digits.startsWith("242")) {

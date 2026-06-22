@@ -3,6 +3,11 @@ export default function Home() {
     <div style={{ fontFamily: "monospace", padding: "2rem", maxWidth: 600, margin: "0 auto" }}>
       <h1>Bein Harim Talking Bot</h1>
       <p>WhatsApp-to-voice automation service.</p>
+      <p>
+        <a href="/dashboard" style={{ textDecoration: "underline" }}>
+          → History &amp; management dashboard
+        </a>
+      </p>
       <h2>Endpoints</h2>
       <ul style={{ lineHeight: 2 }}>
         <li>

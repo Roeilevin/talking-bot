@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { notifyTeam } from "@/lib/converto";
+import { updateCallOutcome } from "@/lib/db";
 
 // Called by the Telnyx AI assistant to update the guide / operations team
 // about the outcome of a customer call. Messages are composed here so they
@@ -31,6 +32,11 @@ export async function POST(req: NextRequest) {
         break;
       default:
         message = `ℹ️ ${who}: ${note || event}`;
+    }
+
+    // Record the call outcome for the dashboard (coming / transferred / other).
+    if (event === "coming" || event === "transferred") {
+      await updateCallOutcome(Number(order_id), event, eta || note);
     }
 
     await notifyTeam(team_phone, message);

@@ -8,12 +8,20 @@ export const config = {
     phoneNumber: process.env.TELNYX_PHONE_NUMBER || "",
     callControlAppId: process.env.TELNYX_CALL_CONTROL_APP_ID || "",
     assistantId: process.env.TELNYX_ASSISTANT_ID || "",
+    // Inbound support assistant — used to filter the dashboard's inbound-call list.
+    inboundAssistantId: process.env.TELNYX_INBOUND_ASSISTANT_ID || "",
   },
   converto: {
     apiKey: process.env.CONVERTO_API_KEY || "",
     phoneNumber: process.env.CONVERTO_PHONE_NUMBER || "+972526588834",
     webhookSecret: process.env.CONVERTO_WEBHOOK_SECRET || "",
   },
+  supabase: {
+    url: process.env.SUPABASE_URL || "",
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+  },
+  // Shared password gating the /dashboard history page.
+  dashboardPassword: process.env.DASHBOARD_PASSWORD || "",
   // WhatsApp number of the guide / operations team that receives call status updates
   opsWhatsAppNumber:
     process.env.OPS_WHATSAPP_NUMBER ||
@@ -31,5 +39,16 @@ export function validateConfig() {
   if (!config.converto.apiKey) missing.push("CONVERTO_API_KEY");
   if (missing.length > 0) {
     throw new Error(`Missing environment variables: ${missing.join(", ")}`);
+  }
+
+  // Dashboard / persistence are optional: warn but never block the bot from booting.
+  const softMissing: string[] = [];
+  if (!config.supabase.url) softMissing.push("SUPABASE_URL");
+  if (!config.supabase.serviceRoleKey) softMissing.push("SUPABASE_SERVICE_ROLE_KEY");
+  if (!config.dashboardPassword) softMissing.push("DASHBOARD_PASSWORD");
+  if (softMissing.length > 0) {
+    console.warn(
+      `[config] Dashboard/history disabled — missing: ${softMissing.join(", ")}`
+    );
   }
 }
