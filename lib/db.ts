@@ -17,6 +17,7 @@ function db(): SupabaseClient | null {
 
 const CALLS = "talking_bot_calls";
 const SENDS = "talking_bot_whatsapp_sends";
+const ALLOWED = "talking_bot_allowed_numbers";
 
 export type CallStatus =
   | "placed"
@@ -72,6 +73,30 @@ export interface NewWhatsAppSend {
   text?: string | null;
   channel?: string | null;
   order_number?: number | null;
+}
+
+export interface AllowedNumberRow {
+  id: string;
+  phone_number: string;
+  label: string | null;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface NewAllowedNumber {
+  phone_number: string;
+  label?: string | null;
+}
+
+// Canonical digits-only form (E.164 without "+"). Israeli local numbers written
+// with a leading 0 (e.g. 050-442-5422) are converted to their international form
+// (972504425422) so they match a WhatsApp sender id regardless of how the row
+// was typed in. Returns "" when there are no usable digits.
+export function normalizePhone(raw: string): string {
+  let d = String(raw ?? "").replace(/\D/g, "");
+  if (d.startsWith("00")) d = d.slice(2); // 00<country> international prefix
+  if (d.startsWith("0")) d = "972" + d.slice(1); // Israeli local → +972
+  return d;
 }
 
 // ---- Writes: best-effort. They log and swallow so persistence can NEVER
@@ -150,6 +175,33 @@ export async function updateCallOutcome(
   }
 }
 
+// Outcome of the most-recent call for an order, used by the Telnyx webhook to
+// decide whether a connected-but-unproductive call should be retried.
+//   string    → an outcome was recorded (coming / no-show / transferred)
+//   null      → a call row exists but the assistant logged no outcome
+//   undefined → can't tell (Supabase unconfigured / query error / no row) →
+//               callers should NOT retry on this, to avoid loops on an outage.
+export async function getLatestCallOutcome(
+  orderNumber: number
+): Promise<string | null | undefined> {
+  const sb = db();
+  if (!sb || !Number.isFinite(orderNumber)) return undefined;
+  try {
+    const { data, error } = await sb
+      .from(CALLS)
+      .select("outcome")
+      .eq("order_number", orderNumber)
+      .order("created_at", { ascending: false })
+      .limit(1);
+    if (error) throw error;
+    if (!data || data.length === 0) return undefined;
+    return (data[0].outcome as string | null) ?? null;
+  } catch (e) {
+    console.error("[db] getLatestCallOutcome failed", e);
+    return undefined;
+  }
+}
+
 export async function insertWhatsAppSend(input: NewWhatsAppSend): Promise<void> {
   const sb = db();
   if (!sb) return;
@@ -195,4 +247,86 @@ export async function listWhatsAppSends(limit = 100): Promise<WhatsAppSendRow[]>
     console.error("[db] listWhatsAppSends failed", e);
     return [];
   }
+}
+
+// ---- Allowed numbers (sender allowlist) ----
+
+// Is this WhatsApp sender permitted to use the bot?
+//   true  → on the active allowlist
+//   false → reachable allowlist, sender not on it (block + tell them)
+//   null  → enforcement unavailable (Supabase unconfigured or a query error);
+//           the caller should fail OPEN so the bot never breaks on an outage.
+export async function isPhoneAllowed(phone: string): Promise<boolean | null> {
+  const sb = db();
+  if (!sb) return null;
+  const target = normalizePhone(phone);
+  if (!target) return false;
+  try {
+    const { data, error } = await sb
+      .from(ALLOWED)
+      .select("phone_number")
+      .eq("is_active", true);
+    if (error) throw error;
+    return (data ?? []).some(
+      (r: { phone_number: string }) => normalizePhone(r.phone_number) === target
+    );
+  } catch (e) {
+    console.error("[db] isPhoneAllowed failed", e);
+    return null; // fail open
+  }
+}
+
+export async function listAllowedNumbers(): Promise<AllowedNumberRow[]> {
+  const sb = db();
+  if (!sb) return [];
+  try {
+    const { data, error } = await sb
+      .from(ALLOWED)
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data as AllowedNumberRow[]) ?? [];
+  } catch (e) {
+    console.error("[db] listAllowedNumbers failed", e);
+    return [];
+  }
+}
+
+// Add (or update the label of) one or more numbers. Phones are normalized and
+// de-duplicated; blanks are dropped. Upserts on the unique phone_number so a
+// re-add just refreshes the label and re-activates the row. Throws on failure
+// (admin path — the API route surfaces the error to the user).
+export async function upsertAllowedNumbers(
+  items: NewAllowedNumber[]
+): Promise<{ saved: number; skipped: number }> {
+  const sb = db();
+  if (!sb) throw new Error("Supabase is not configured");
+
+  const byPhone = new Map<string, { phone_number: string; label: string | null; is_active: boolean }>();
+  let skipped = 0;
+  for (const item of items) {
+    const phone_number = normalizePhone(item.phone_number);
+    if (!phone_number) {
+      skipped++;
+      continue;
+    }
+    const label = item.label?.toString().trim() || null;
+    byPhone.set(phone_number, { phone_number, label, is_active: true });
+  }
+
+  const rows = [...byPhone.values()];
+  if (rows.length === 0) return { saved: 0, skipped };
+
+  const { error } = await sb
+    .from(ALLOWED)
+    .upsert(rows, { onConflict: "phone_number" });
+  if (error) throw error;
+  return { saved: rows.length, skipped };
+}
+
+export async function deleteAllowedNumber(id: string): Promise<void> {
+  const sb = db();
+  if (!sb) throw new Error("Supabase is not configured");
+  const { error } = await sb.from(ALLOWED).delete().eq("id", id);
+  if (error) throw error;
 }

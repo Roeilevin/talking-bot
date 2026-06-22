@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { DASH_COOKIE, isValidDashCookie } from "@/lib/auth";
 import { listCalls, listWhatsAppSends, type CallRow, type WhatsAppSendRow } from "@/lib/db";
 import { listInboundConversations, type InboundConversation } from "@/lib/telnyx";
@@ -44,11 +45,20 @@ export default async function DashboardPage() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1>Talking Bot — History</h1>
-        <form method="POST" action="/api/logout">
-          <button type="submit" className={styles.logout}>
-            Sign out
-          </button>
-        </form>
+        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+          <Link
+            href="/allowed-numbers"
+            className={styles.logout}
+            style={{ textDecoration: "none", display: "inline-block" }}
+          >
+            Allowed numbers
+          </Link>
+          <form method="POST" action="/api/logout">
+            <button type="submit" className={styles.logout}>
+              Sign out
+            </button>
+          </form>
+        </div>
       </div>
 
       {/* Outbound no-show calls */}

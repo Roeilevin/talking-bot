@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getOrderDetails } from "@/lib/bein-harim";
 import { sendWhatsAppMessage, notifyTeam, verifyConvertoSignature } from "@/lib/converto";
 import { startAssistantCall } from "@/lib/telnyx";
-import { insertCall } from "@/lib/db";
+import { insertCall, isPhoneAllowed } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,6 +35,18 @@ export async function POST(req: NextRequest) {
     // Must be exactly 6 digits (order number)
     if (!/^\d{6}$/.test(messageText)) {
       return NextResponse.json({ ok: true, reason: "not_6_digits" });
+    }
+
+    // Enforce the sender allowlist (managed at /allowed-numbers). Only numbers
+    // on the active list may trigger a call. `null` = enforcement unavailable
+    // (Supabase down/unconfigured) → fail open so the bot keeps working.
+    const allowed = await isPhoneAllowed(senderPhone);
+    if (allowed === false) {
+      await sendWhatsAppMessage(
+        senderPhone,
+        "You are not allowed to use this service. Please contact the administrator to be added to the approved list."
+      );
+      return NextResponse.json({ ok: true, reason: "not_allowed" });
     }
 
     const orderNumber = parseInt(messageText, 10);

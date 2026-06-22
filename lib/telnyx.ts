@@ -21,18 +21,21 @@ function voiceIdForLanguage(languageCode: string): string {
 
 export async function startAssistantCall(
   order: OrderDetails,
-  teamPhone: string
+  teamPhone: string,
+  attempt = 1
 ): Promise<{ call_control_id: string }> {
   const to = formatPhoneNumber(order.customer_phone);
 
   // Carry order context + the requesting team member in the StatusCallback
   // query string so the Telnyx webhook can report unanswered calls back to them.
+  // `attempt` lets the webhook cap automatic retries (see MAX_CALL_ATTEMPTS).
   const customerName = `${order.customer_first_name} ${order.customer_last_name}`;
   const statusCallback =
     `${config.publicBaseUrl}/api/webhooks/telnyx` +
     `?order_number=${encodeURIComponent(order.order_number)}` +
     `&customer_name=${encodeURIComponent(customerName)}` +
-    `&team_phone=${encodeURIComponent(teamPhone)}`;
+    `&team_phone=${encodeURIComponent(teamPhone)}` +
+    `&attempt=${attempt}`;
 
   const res = await fetch(
     `https://api.telnyx.com/v2/texml/ai_calls/${config.telnyx.callControlAppId}`,

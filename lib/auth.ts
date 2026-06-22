@@ -24,3 +24,11 @@ export function isValidDashCookie(value: string | undefined): boolean {
   if (!config.dashboardPassword || !value) return false;
   return timingSafeEqualStr(value, expectedDashToken());
 }
+
+// Auth guard for API route handlers (the proxy only gates pages, never /api/*).
+// Reads the dashboard cookie and verifies it, same as the pages do.
+export async function isAuthedRequest(): Promise<boolean> {
+  const { cookies } = await import("next/headers");
+  const store = await cookies();
+  return isValidDashCookie(store.get(DASH_COOKIE)?.value);
+}
