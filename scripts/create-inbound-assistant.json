@@ -34,7 +34,7 @@
       "timeout_ms": 5000,
       "transfer": {
         "description": "Transfer the call to a human Bein Harim agent.",
-        "target": "+972504425422"
+        "target": "+97235422003"
       }
     },
     {
@@ -47,7 +47,7 @@
     }
   ],
   "voice_settings": {
-    "voice": "Telnyx.Ultra.00a77add-48d5-4ef6-8157-71e5437b282d",
+    "voice": "Telnyx.Ultra.db6b0ed5-d5d3-463d-ae85-518a07d3c2b4",
     "voice_speed": 0.95,
     "language_boost": "auto",
     "expressive_mode": true,
