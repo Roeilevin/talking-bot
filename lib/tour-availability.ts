@@ -170,7 +170,11 @@ function isoDate(s?: string): string | null {
 export function resolveDateRange(fromDate?: string, toDate?: string, defaultDays = 60): { from: string; to: string } {
   const today = jerusalemToday();
   const from = isoDate(fromDate) || today;
-  const to = isoDate(toDate) || addDays(from, defaultDays);
+  let to = isoDate(toDate) || addDays(from, defaultDays);
+  // The API rejects from_date > to_date with a 400. A caller-supplied date in
+  // the past (from defaults to today) or a reversed range shouldn't crash the
+  // lookup — widen the window instead. (YYYY-MM-DD compares lexicographically.)
+  if (to < from) to = addDays(from, defaultDays);
   return { from, to };
 }
 
