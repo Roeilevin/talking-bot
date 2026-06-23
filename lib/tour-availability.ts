@@ -183,7 +183,7 @@ export function resolveDateRange(fromDate?: string, toDate?: string, defaultDays
 // ---------------------------------------------------------------------------
 const FIELDS = [
   "tour_num", "name", "type_id", "is_private", "duration", "min_participants",
-  "associate_areas", "language_availability", "prices", "pick_up",
+  "associate_areas", "language_availability", "prices", "pick_up", "score",
 ].join(",");
 
 type RawTour = {
@@ -197,6 +197,10 @@ type RawTour = {
   language_availability?: Record<string, Record<string, string>>;
   prices?: unknown;
   pick_up?: Array<Record<string, string>>;
+  // BH popularity/priority score (numeric string, e.g. "137"; higher = recommend
+  // first). Present on every tour; the API already returns rows sorted by it
+  // desc, but we re-sort locally so ranking survives our area/language filters.
+  score?: number | string;
 };
 
 export type AvailabilityParams = {
@@ -221,6 +225,8 @@ export type AvailableTour = {
   fromPrice: number | null;
   priceUnit: string | null;
   url: string | null;
+  // BH recommendation score (higher = listed first); null if unscored.
+  score: number | null;
 };
 
 export type AvailabilityResult = {
@@ -238,6 +244,13 @@ export type AvailabilityResult = {
 };
 
 const TYPE_NAME = new Map<string, string>(TOUR_TYPES.map((t) => [t.id, t.name]));
+
+// BH `score` arrives as a numeric string ("137"); higher means recommend first.
+// Unscored/garbage → null so it sorts to the bottom.
+function parseScore(s?: number | string): number | null {
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
 
 function langsOffered(la?: Record<string, Record<string, string>>): string[] {
   if (!la) return [];
@@ -334,6 +347,13 @@ export async function getTourAvailability(params: AvailabilityParams): Promise<A
     else notes.push(`No tours in this window run in ${language.full_name}; showing tours in other languages.`);
   }
 
+  // Recommend by score: highest first. Stable for equal scores (keeps the API's
+  // own ordering as the tie-breaker); unscored tours sink to the bottom.
+  rows = rows
+    .map((t, i) => ({ t, i, score: parseScore(t.score) }))
+    .sort((a, b) => (b.score ?? -Infinity) - (a.score ?? -Infinity) || a.i - b.i)
+    .map((x) => x.t);
+
   const limit = Math.max(1, Math.min(params.limit ?? 5, 20));
   const tours: AvailableTour[] = rows.slice(0, limit).map((t) => {
     const tourNum = String(t.tour_num);
@@ -351,6 +371,7 @@ export async function getTourAvailability(params: AvailabilityParams): Promise<A
       fromPrice: price,
       priceUnit: unit,
       url: catalog ? affiliateUrl(catalog.url) : null,
+      score: parseScore(t.score),
     };
   });
 
