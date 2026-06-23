@@ -90,6 +90,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error("[Tool: tour-availability] Error", err);
-    return NextResponse.json({ error: "internal_error" }, { status: 500 });
+    const detail = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: "internal_error", detail }, { status: 500 });
   }
 }
