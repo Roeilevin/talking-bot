@@ -20,6 +20,14 @@ export const config = {
     url: process.env.SUPABASE_URL || "",
     serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
   },
+  // Microsoft Graph (app-only) for sending email from the info@ shared mailbox.
+  // Used as the fallback delivery channel for callers who don't use WhatsApp.
+  microsoft: {
+    tenantId: process.env.MS_TENANT_ID || "",
+    clientId: process.env.MS_CLIENT_ID || "",
+    clientSecret: process.env.MS_CLIENT_SECRET || "",
+    senderMailbox: process.env.MS_SENDER_MAILBOX || "info@beinharimtours.com",
+  },
   // Shared password gating the /dashboard history page.
   dashboardPassword: process.env.DASHBOARD_PASSWORD || "",
   // WhatsApp number of the guide / operations team that receives call status updates
@@ -27,7 +35,7 @@ export const config = {
     process.env.OPS_WHATSAPP_NUMBER ||
     process.env.CONVERTO_PHONE_NUMBER ||
     "972526588834",
-  transferPhoneNumber: process.env.TRANSFER_PHONE_NUMBER || "972504425422",
+  transferPhoneNumber: process.env.TRANSFER_PHONE_NUMBER || "97235422003",
   publicBaseUrl: process.env.PUBLIC_BASE_URL || "http://localhost:3000",
 } as const;
 
@@ -49,6 +57,17 @@ export function validateConfig() {
   if (softMissing.length > 0) {
     console.warn(
       `[config] Dashboard/history disabled — missing: ${softMissing.join(", ")}`
+    );
+  }
+
+  // Email fallback is optional: warn but never block the bot from booting.
+  const emailMissing: string[] = [];
+  if (!config.microsoft.tenantId) emailMissing.push("MS_TENANT_ID");
+  if (!config.microsoft.clientId) emailMissing.push("MS_CLIENT_ID");
+  if (!config.microsoft.clientSecret) emailMissing.push("MS_CLIENT_SECRET");
+  if (emailMissing.length > 0) {
+    console.warn(
+      `[config] Email fallback (send_email) disabled — missing: ${emailMissing.join(", ")}`
     );
   }
 }
