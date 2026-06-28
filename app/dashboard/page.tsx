@@ -2,9 +2,10 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { DASH_COOKIE, isValidDashCookie } from "@/lib/auth";
-import { listCalls, listWhatsAppSends, type CallRow, type WhatsAppSendRow } from "@/lib/db";
+import { listCalls, listWhatsAppSends, getSetting, type CallRow, type WhatsAppSendRow } from "@/lib/db";
 import { listInboundConversations, type InboundConversation } from "@/lib/telnyx";
 import ExpandableRow from "./ExpandableRow";
+import BhEnvToggle from "./BhEnvToggle";
 import styles from "./dashboard.module.css";
 
 export const dynamic = "force-dynamic";
@@ -35,17 +36,26 @@ export default async function DashboardPage() {
     redirect("/login?next=/dashboard");
   }
 
-  const [calls, sends, inbound] = await Promise.all([
+  const [calls, sends, inbound, bhEnvRaw] = await Promise.all([
     listCalls(200),
     listWhatsAppSends(200),
     listInboundConversations(50),
+    getSetting("bh_env"),
   ]);
+  const bhEnv: "production" | "test" = bhEnvRaw === "test" ? "test" : "production";
 
   return (
     <div className={styles.page}>
+      {bhEnv === "test" && (
+        <div className={styles.testBanner}>
+          ⚠️ TEST environment active — the bot is reading/writing the Bein Harim
+          <strong> test</strong> backend, not production.
+        </div>
+      )}
       <div className={styles.header}>
         <h1>Talking Bot — History</h1>
         <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+          <BhEnvToggle initialEnv={bhEnv} />
           <Link
             href="/allowed-numbers"
             className={styles.logout}

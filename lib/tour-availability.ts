@@ -9,7 +9,7 @@
 // server-side params — we filter those locally via associate_areas /
 // language_availability. See memory: tours-availability-api.
 
-import { config } from "./config";
+import { getActiveBeinHarim } from "./bein-harim";
 import { TOURS, affiliateUrl, type Tour } from "./tours";
 import tourTypesRaw from "@/data/tour-types.json";
 import languagesRaw from "@/data/languages.json";
@@ -312,11 +312,12 @@ export async function getTourAvailability(params: AvailabilityParams): Promise<A
   if (pickup) qs.set("pickup_place_id", pickup.id);
   if (destination?.kind === "place") qs.set("place_id", destination.placeId);
 
-  const res = await fetch(`${config.beinHarim.baseUrl}/tours?${qs.toString()}`, {
+  const { baseUrl, apiKey } = await getActiveBeinHarim();
+  const res = await fetch(`${baseUrl}/tours?${qs.toString()}`, {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "BH-API-KEY": config.beinHarim.apiKey,
+      "BH-API-KEY": apiKey,
     },
   });
   if (!res.ok) throw new Error(`Bein Harim tours API error: ${res.status} ${res.statusText}`);

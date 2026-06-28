@@ -18,6 +18,7 @@ function db(): SupabaseClient | null {
 const CALLS = "talking_bot_calls";
 const SENDS = "talking_bot_whatsapp_sends";
 const ALLOWED = "talking_bot_allowed_numbers";
+const SETTINGS = "talking_bot_settings";
 
 export type CallStatus =
   | "placed"
@@ -247,6 +248,42 @@ export async function listWhatsAppSends(limit = 100): Promise<WhatsAppSendRow[]>
     console.error("[db] listWhatsAppSends failed", e);
     return [];
   }
+}
+
+// ---- Settings (key/value) ----
+// Small shared key/value store for runtime settings (e.g. the Bein Harim
+// environment toggle). Uses the service-role client like everything else.
+
+// Read a setting. Returns null when unset OR when Supabase is unavailable, so
+// callers must supply a safe default.
+export async function getSetting(key: string): Promise<string | null> {
+  const sb = db();
+  if (!sb) return null;
+  try {
+    const { data, error } = await sb
+      .from(SETTINGS)
+      .select("value")
+      .eq("key", key)
+      .limit(1);
+    if (error) throw error;
+    return (data?.[0]?.value as string | undefined) ?? null;
+  } catch (e) {
+    console.error("[db] getSetting failed", e);
+    return null;
+  }
+}
+
+// Write a setting. Throws on failure (admin path — the API route surfaces it).
+export async function setSetting(key: string, value: string): Promise<void> {
+  const sb = db();
+  if (!sb) throw new Error("Supabase is not configured");
+  const { error } = await sb
+    .from(SETTINGS)
+    .upsert(
+      { key, value, updated_at: new Date().toISOString() },
+      { onConflict: "key" }
+    );
+  if (error) throw error;
 }
 
 // ---- Allowed numbers (sender allowlist) ----

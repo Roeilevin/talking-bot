@@ -1,7 +1,27 @@
+// Bein Harim has two backends — production and a test/dev environment. The
+// active one is chosen at runtime by the dashboard toggle (persisted in
+// Supabase as the `bh_env` setting); see lib/bein-harim.ts getActiveBeinHarim().
+const BH_PROD_BASE =
+  process.env.BH_API_BASE_URL || "https://dev-v3.beinharimtours.com/api/v2";
+const BH_PROD_KEY = process.env.BH_API_KEY || "";
+const BH_TEST_BASE =
+  process.env.BH_API_BASE_URL_TEST || "https://dev-v3.beinharimtours.com/api/v2";
+const BH_TEST_KEY = process.env.BH_API_KEY_TEST || "";
+
+export type BhEnv = "production" | "test";
+
 export const config = {
   beinHarim: {
-    baseUrl: process.env.BH_API_BASE_URL || "https://dev-v3.beinharimtours.com/api/v2",
-    apiKey: process.env.BH_API_KEY || "",
+    // Default/primary credentials. Kept as baseUrl/apiKey for any code path that
+    // doesn't resolve the runtime toggle. On Vercel production these are the real
+    // production credentials.
+    baseUrl: BH_PROD_BASE,
+    apiKey: BH_PROD_KEY,
+    // The two switchable environments. getActiveBeinHarim() picks one of these.
+    environments: {
+      production: { baseUrl: BH_PROD_BASE, apiKey: BH_PROD_KEY },
+      test: { baseUrl: BH_TEST_BASE, apiKey: BH_TEST_KEY },
+    } as Record<BhEnv, { baseUrl: string; apiKey: string }>,
   },
   telnyx: {
     apiKey: process.env.TELNYX_API_KEY || "",
@@ -57,6 +77,14 @@ export function validateConfig() {
   if (softMissing.length > 0) {
     console.warn(
       `[config] Dashboard/history disabled — missing: ${softMissing.join(", ")}`
+    );
+  }
+
+  // Test BH environment is optional: warn if the toggle could be flipped to a
+  // 'test' env that has no credentials configured.
+  if (!config.beinHarim.environments.test.apiKey) {
+    console.warn(
+      "[config] BH 'test' environment toggle has no BH_API_KEY_TEST set — switching to test will fail until it is configured."
     );
   }
 
