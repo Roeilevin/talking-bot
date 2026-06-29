@@ -30,12 +30,19 @@ export async function POST(req: NextRequest) {
       case "transferred":
         message = `↪️ ${who}: השיחה הועברה לנציג אנושי.${note ? ` ${note}` : ""}`;
         break;
+      case "human_request":
+        message = `🙋 ${who}: הלקוח מבקש לדבר עם נציג אנושי.${note ? ` ${note}` : ""}`;
+        break;
       default:
         message = `ℹ️ ${who}: ${note || event}`;
     }
 
-    // Record the call outcome for the dashboard (coming / transferred / other).
-    if (event === "coming" || event === "transferred") {
+    // Record the call outcome for the dashboard.
+    if (
+      event === "coming" ||
+      event === "transferred" ||
+      event === "human_request"
+    ) {
       await updateCallOutcome(Number(order_id), event, eta || note);
     }
 

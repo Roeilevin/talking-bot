@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendMail, type MailAttachment } from "@/lib/graph-mail";
 import { normalizeEmail } from "@/lib/email";
+import { renderBrandedEmail } from "@/lib/email-template";
 import { getOrderDetails } from "@/lib/bein-harim";
 import { insertWhatsAppSend } from "@/lib/db";
-
-function escapeHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
 
 // Inbound assistant tool: deliver content to the caller by EMAIL — the fallback
 // channel for callers who don't use WhatsApp. Sent from the info@ shared mailbox
@@ -69,10 +66,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const text = String(message);
-    const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;white-space:pre-wrap">${escapeHtml(
-      text
-    )}</div>`;
+    const { html, text } = renderBrandedEmail(String(subject), String(message));
 
     await sendMail({
       to: normalized.email,
@@ -87,7 +81,7 @@ export async function POST(req: NextRequest) {
       recipient: normalized.email,
       direction: "customer",
       kind: attachments.length ? "email:voucher" : "email",
-      text: `${subject}\n\n${text}`,
+      text: `${subject}\n\n${String(message)}`,
       channel: "email",
       order_number: orderId ? Number(orderId) : null,
     });
