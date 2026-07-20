@@ -1,13 +1,19 @@
 // Two-level inbound IVR served as TeXML.
 //
 // Level 1: language menu (press 1 English / 2 Spanish / 3 Hebrew / 4 German).
-// Level 2 (in the chosen language): press 1 = transfer to human ops (on a trip /
-//   pickup), press 2 = tour info via AI agent, press 3 = any other question via
-//   AI agent. Options 2 & 3 both <Connect> the language's AI assistant.
+// Level 2 (in the chosen language):
+//   1 = information about tours       -> general AI assistant
+//   2 = on a trip / can't find pickup -> transfer to human ops
+//   3 = assistance for your booking   -> dedicated booking AI assistant
+//                                        (opens by asking for the order number)
+//   4 = other inquiries               -> general AI assistant
 //
 // Telnyx AI Assistants can't capture inbound DTMF, so the menu lives in this
 // TeXML layer in front of the assistants. The connect snippet mirrors what
 // GET /v2/ai/assistants/{id}/texml returns: <Connect><AIAssistant id=.../></Connect>.
+// The verb only takes id/join/participant* — there's no way to tell an assistant
+// which digit was pressed, so option 3 uses a separate booking assistant instead
+// of passing intent into the shared one.
 
 export const PUBLIC_BASE = (
   process.env.PUBLIC_BASE_URL || "https://talking-bot-lilac.vercel.app"
@@ -32,14 +38,19 @@ export type LangCode = "en" | "es" | "he" | "de";
 
 export interface LangEntry {
   code: LangCode;
+  // General support assistant (menu options 1 = tours, 4 = other).
   assistantId: string;
+  // Dedicated booking assistant (menu option 3) — clone of the general one that
+  // opens by asking for the 6-digit order number. Created by
+  // scripts/create-booking-assistants.mjs; overridable via env TELNYX_BOOKING_*.
+  bookingAssistantId: string;
   // Telnyx platform TTS voice (id from GET /v2/text-to-speech/voices), native
   // to the language so the prompts pronounce correctly. Easy to swap, or move
   // to pre-recorded <Play> clips later.
   voice: string;
   // Level-2 menu prompt, spoken in the selected language.
   menu: string;
-  // Spoken when option 1's human transfer isn't answered.
+  // Spoken when option 2's human transfer isn't answered.
   unavailable: string;
 }
 
@@ -50,8 +61,11 @@ export const LANGUAGES: Record<string, LangEntry> = {
     assistantId:
       process.env.TELNYX_ASSISTANT_EN ||
       "assistant-8a3c00ed-392c-4479-a186-560890142518",
+    bookingAssistantId:
+      process.env.TELNYX_BOOKING_EN ||
+      "assistant-a5e8d57e-aa99-4f7d-b1f2-b8485070054e",
     voice: "Telnyx.Bayan.Amanda",
-    menu: "Press 1 if you're currently on a trip or looking for your pickup location. Press 2 for information about our tours. Press 3 for any other question.",
+    menu: "Press 1 for information about our tours. Press 2 if you're currently on a trip or can't find your pickup location. Press 3 for assistance with your booking. Press 4 for any other inquiry.",
     unavailable:
       "Sorry, our team is not available right now. Please try again later. Goodbye.",
   },
@@ -60,8 +74,11 @@ export const LANGUAGES: Record<string, LangEntry> = {
     assistantId:
       process.env.TELNYX_ASSISTANT_ES ||
       "assistant-a8eb4c15-1840-4204-b2ff-4eb5c86f8c36",
+    bookingAssistantId:
+      process.env.TELNYX_BOOKING_ES ||
+      "assistant-861cbddc-a827-468d-9917-45fc22a1fc82",
     voice: "Telnyx.NaturalHD.lark",
-    menu: "Presione 1 si está de viaje ahora o busca su punto de recogida. Presione 2 para información sobre nuestros tours. Presione 3 para cualquier otra pregunta.",
+    menu: "Presione 1 para información sobre nuestros tours. Presione 2 si está de viaje ahora o no encuentra su punto de recogida. Presione 3 para asistencia con su reserva. Presione 4 para cualquier otra consulta.",
     unavailable:
       "Lo sentimos, nuestro equipo no está disponible en este momento. Por favor, inténtelo de nuevo más tarde. Adiós.",
   },
@@ -70,8 +87,11 @@ export const LANGUAGES: Record<string, LangEntry> = {
     assistantId:
       process.env.TELNYX_ASSISTANT_HE ||
       "assistant-eb38b76f-b649-4f50-ace9-0e792ab9c005",
+    bookingAssistantId:
+      process.env.TELNYX_BOOKING_HE ||
+      "assistant-4436ae27-6918-4075-874e-53784edd8fac",
     voice: "Telnyx.NaturalHD.aviva",
-    menu: "הקישו 1 אם אתם בטיול כעת או מחפשים את נקודת האיסוף. הקישו 2 למידע על הטיולים שלנו. הקישו 3 לכל שאלה אחרת.",
+    menu: "הקישו 1 למידע על הטיולים שלנו. הקישו 2 אם אתם בטיול כעת או שאינכם מוצאים את נקודת האיסוף. הקישו 3 לסיוע בהזמנה שלכם. הקישו 4 לכל פנייה אחרת.",
     unavailable:
       "מצטערים, הצוות שלנו אינו זמין כרגע. אנא נסו שוב מאוחר יותר. להתראות.",
   },
@@ -80,8 +100,11 @@ export const LANGUAGES: Record<string, LangEntry> = {
     assistantId:
       process.env.TELNYX_ASSISTANT_DE ||
       "assistant-a1de7cf2-26c6-4117-820b-a1c0082aac7c",
+    bookingAssistantId:
+      process.env.TELNYX_BOOKING_DE ||
+      "assistant-25d91760-4051-4946-950e-697597e4edaa",
     voice: "Telnyx.NaturalHD.alfhild",
-    menu: "Drücken Sie die 1, wenn Sie gerade auf einer Tour sind oder Ihren Abholort suchen. Drücken Sie die 2 für Informationen zu unseren Touren. Drücken Sie die 3 für alle anderen Fragen.",
+    menu: "Drücken Sie die 1 für Informationen zu unseren Touren. Drücken Sie die 2, wenn Sie gerade auf einer Tour sind oder Ihren Abholort nicht finden. Drücken Sie die 3 für Hilfe zu Ihrer Buchung. Drücken Sie die 4 für alle anderen Anliegen.",
     unavailable:
       "Es tut uns leid, unser Team ist im Moment nicht erreichbar. Bitte versuchen Sie es später erneut. Auf Wiederhören.",
   },
@@ -164,11 +187,22 @@ export function intentMenu(lang: LangEntry): Response {
   );
 }
 
-// Connect the caller to the language's AI assistant.
-export function connectAssistant(lang: LangEntry): Response {
+// Connect the caller to a specific AI assistant id.
+function connectAssistantId(assistantId: string): Response {
   return texml(
-    `<Connect><AIAssistant id="${xmlEscape(lang.assistantId)}"></AIAssistant></Connect>`
+    `<Connect><AIAssistant id="${xmlEscape(assistantId)}"></AIAssistant></Connect>`
   );
+}
+
+// Connect to the language's general support assistant (menu 1 = tours, 4 = other).
+export function connectAssistant(lang: LangEntry): Response {
+  return connectAssistantId(lang.assistantId);
+}
+
+// Connect to the language's dedicated booking assistant (menu 3) — it opens by
+// asking for the caller's order number and what they need.
+export function connectBookingAssistant(lang: LangEntry): Response {
+  return connectAssistantId(lang.bookingAssistantId);
 }
 
 // Option 1: dial the human ops line; on no-answer run the fallback route.

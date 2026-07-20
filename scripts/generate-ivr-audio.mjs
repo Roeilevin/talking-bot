@@ -33,11 +33,11 @@ const clips = [
   { file: "lang-es.mp3", voice: V.es, text: "Para español, por favor presione el 2." },
   { file: "lang-he.mp3", voice: V.he, text: "לעברית, אנא הקישו 3." },
   { file: "lang-de.mp3", voice: V.de, text: "Für Deutsch, drücken Sie bitte die 4." },
-  // Level-2 intent menu.
-  { file: "menu-en.mp3", voice: V.en, text: "Press 1 if you're currently on a trip or looking for your pickup location. Press 2 for information about our tours. Press 3 for any other question." },
-  { file: "menu-es.mp3", voice: V.es, text: "Presione 1 si está de viaje ahora o busca su punto de recogida. Presione 2 para información sobre nuestros tours. Presione 3 para cualquier otra pregunta." },
-  { file: "menu-he.mp3", voice: V.he, text: "הקישו 1 אם אתם בטיול כעת או מחפשים את נקודת האיסוף. הקישו 2 למידע על הטיולים שלנו. הקישו 3 לכל שאלה אחרת." },
-  { file: "menu-de.mp3", voice: V.de, text: "Drücken Sie die 1, wenn Sie gerade auf einer Tour sind oder Ihren Abholort suchen. Drücken Sie die 2 für Informationen zu unseren Touren. Drücken Sie die 3 für alle anderen Fragen." },
+  // Level-2 intent menu (must match the `menu` strings in lib/ivr.ts LANGUAGES).
+  { file: "menu-en.mp3", voice: V.en, text: "Press 1 for information about our tours. Press 2 if you're currently on a trip or can't find your pickup location. Press 3 for assistance with your booking. Press 4 for any other inquiry." },
+  { file: "menu-es.mp3", voice: V.es, text: "Presione 1 para información sobre nuestros tours. Presione 2 si está de viaje ahora o no encuentra su punto de recogida. Presione 3 para asistencia con su reserva. Presione 4 para cualquier otra consulta." },
+  { file: "menu-he.mp3", voice: V.he, text: "הקישו 1 למידע על הטיולים שלנו. הקישו 2 אם אתם בטיול כעת או שאינכם מוצאים את נקודת האיסוף. הקישו 3 לסיוע בהזמנה שלכם. הקישו 4 לכל פנייה אחרת." },
+  { file: "menu-de.mp3", voice: V.de, text: "Drücken Sie die 1 für Informationen zu unseren Touren. Drücken Sie die 2, wenn Sie gerade auf einer Tour sind oder Ihren Abholort nicht finden. Drücken Sie die 3 für Hilfe zu Ihrer Buchung. Drücken Sie die 4 für alle anderen Anliegen." },
   // No-answer transfer fallback.
   { file: "unavail-en.mp3", voice: V.en, text: "Sorry, our team is not available right now. Please try again later. Goodbye." },
   { file: "unavail-es.mp3", voice: V.es, text: "Lo sentimos, nuestro equipo no está disponible en este momento. Por favor, inténtelo de nuevo más tarde. Adiós." },
