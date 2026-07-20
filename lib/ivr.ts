@@ -13,6 +13,10 @@ export const PUBLIC_BASE = (
   process.env.PUBLIC_BASE_URL || "https://talking-bot-lilac.vercel.app"
 ).replace(/\/+$/, "");
 
+// Base URL for the pre-generated Ultra-voice menu clips in public/ivr/
+// (produced by scripts/generate-ivr-audio.mjs).
+const CLIP_BASE = `${PUBLIC_BASE}/ivr`;
+
 // Option 1 (on a trip / pickup) transfers here — the human operations line.
 export const OPS_TRANSFER_NUMBER =
   process.env.IVR_TRANSFER_NUMBER || "+97235422003";
@@ -83,18 +87,9 @@ export const LANGUAGES: Record<string, LangEntry> = {
   },
 };
 
-// Level-1 language menu lines, each spoken by that language's native voice.
-// Opens with an English greeting, then each language prompts (in its own
-// language) which digit to press.
-const LANGUAGE_MENU_LINES: { voice: string; text: string }[] = [
-  {
-    voice: "Telnyx.Bayan.Amanda",
-    text: "Hi, this is Bein Harim Tours. For English, please press 1.",
-  },
-  { voice: "Telnyx.NaturalHD.lark", text: "Para español, por favor presione el 2." },
-  { voice: "Telnyx.NaturalHD.aviva", text: "לעברית, אנא הקישו 3." },
-  { voice: "Telnyx.NaturalHD.alfhild", text: "Für Deutsch, drücken Sie bitte die 4." },
-];
+// Level-1 language menu order: digit -> language code (en, es, he, de),
+// played as lang-<code>.mp3.
+const LANGUAGE_MENU_ORDER = ["1", "2", "3", "4"];
 
 export function byCode(code: string): LangEntry {
   return (
@@ -111,14 +106,12 @@ export function xmlEscape(s: string): string {
     .replace(/'/g, "&apos;");
 }
 
-// Slow the prompts down a touch for a friendlier, clearer read (0.1-2.0,
-// default 1). Overridable via env without a code change.
-const SAY_SPEED = process.env.IVR_VOICE_SPEED || "0.85";
-
-function say(voice: string, text: string): string {
-  return `<Say voice="${xmlEscape(voice)}" voiceSpeed="${SAY_SPEED}">${xmlEscape(
-    text
-  )}</Say>`;
+// The menu prompts are high-quality Ultra-voice MP3s (same voices as the AI
+// agents), pre-generated into public/ivr/ and played with <Play> — Telnyx
+// <Say> only exposes lower-tier voices. To change wording/voice, edit + re-run
+// scripts/generate-ivr-audio.mjs and redeploy.
+function play(clip: string): string {
+  return `<Play>${CLIP_BASE}/${clip}</Play>`;
 }
 
 export function texml(inner: string): Response {
@@ -152,9 +145,11 @@ export async function readParam(
 
 // Level 1: the language menu.
 export function languageMenu(): Response {
-  const lines = LANGUAGE_MENU_LINES.map((l) => say(l.voice, l.text)).join("");
+  const lines = LANGUAGE_MENU_ORDER.map((d) =>
+    play(`lang-${LANGUAGES[d].code}.mp3`)
+  ).join(`<Pause length="1"/>`);
   return texml(
-    `<Gather input="dtmf" numDigits="1" timeout="8" action="${PUBLIC_BASE}/api/texml/select-language" method="POST">${lines}</Gather>` +
+    `<Gather input="dtmf" numDigits="1" timeout="10" action="${PUBLIC_BASE}/api/texml/select-language" method="POST">${lines}</Gather>` +
       `<Redirect method="POST">${PUBLIC_BASE}/api/texml/language</Redirect>`
   );
 }
@@ -162,8 +157,8 @@ export function languageMenu(): Response {
 // Level 2: the intent menu, in the chosen language.
 export function intentMenu(lang: LangEntry): Response {
   return texml(
-    `<Gather input="dtmf" numDigits="1" timeout="8" action="${PUBLIC_BASE}/api/texml/select-option?lang=${lang.code}" method="POST">` +
-      say(lang.voice, lang.menu) +
+    `<Gather input="dtmf" numDigits="1" timeout="10" action="${PUBLIC_BASE}/api/texml/select-option?lang=${lang.code}" method="POST">` +
+      play(`menu-${lang.code}.mp3`) +
       `</Gather>` +
       `<Redirect method="POST">${PUBLIC_BASE}/api/texml/menu?lang=${lang.code}</Redirect>`
   );
@@ -190,5 +185,5 @@ export function afterTransfer(lang: LangEntry, dialStatus: string): Response {
   if (dialStatus === "completed" || dialStatus === "answered") {
     return texml(`<Hangup/>`);
   }
-  return texml(say(lang.voice, lang.unavailable) + `<Hangup/>`);
+  return texml(play(`unavail-${lang.code}.mp3`) + `<Hangup/>`);
 }
