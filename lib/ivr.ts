@@ -77,11 +77,16 @@ export const LANGUAGES: Record<string, LangEntry> = {
 };
 
 // Level-1 language menu lines, each spoken by that language's native voice.
+// Opens with an English greeting, then each language prompts (in its own
+// language) which digit to press.
 const LANGUAGE_MENU_LINES: { voice: string; text: string }[] = [
-  { voice: "Telnyx.Bayan.Amanda", text: "For English, press 1." },
-  { voice: "Telnyx.NaturalHD.lark", text: "Para español, presione el dos." },
-  { voice: "Telnyx.NaturalHD.aviva", text: "לשירות בעברית, הקישו שלוש." },
-  { voice: "Telnyx.NaturalHD.alfhild", text: "Für Deutsch, drücken Sie die vier." },
+  {
+    voice: "Telnyx.Bayan.Amanda",
+    text: "Hi, this is Bein Harim Tours. For English, please press 1.",
+  },
+  { voice: "Telnyx.NaturalHD.lark", text: "Para español, por favor presione el 2." },
+  { voice: "Telnyx.NaturalHD.aviva", text: "לעברית, אנא הקישו 3." },
+  { voice: "Telnyx.NaturalHD.alfhild", text: "Für Deutsch, drücken Sie bitte die 4." },
 ];
 
 export function byCode(code: string): LangEntry {
@@ -99,8 +104,14 @@ export function xmlEscape(s: string): string {
     .replace(/'/g, "&apos;");
 }
 
+// Slow the prompts down a touch for a friendlier, clearer read (0.1-2.0,
+// default 1). Overridable via env without a code change.
+const SAY_SPEED = process.env.IVR_VOICE_SPEED || "0.85";
+
 function say(voice: string, text: string): string {
-  return `<Say voice="${xmlEscape(voice)}">${xmlEscape(text)}</Say>`;
+  return `<Say voice="${xmlEscape(voice)}" voiceSpeed="${SAY_SPEED}">${xmlEscape(
+    text
+  )}</Say>`;
 }
 
 export function texml(inner: string): Response {
