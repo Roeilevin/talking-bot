@@ -17,6 +17,13 @@ export const PUBLIC_BASE = (
 export const OPS_TRANSFER_NUMBER =
   process.env.IVR_TRANSFER_NUMBER || "+97235422003";
 
+// Caller ID for the outbound transfer leg. MUST be a Telnyx number we own —
+// presenting the inbound caller's number gets the leg rejected (instant
+// hangup). Use the owned Israeli Bein Harim line so the Israeli ops number
+// accepts it (mirrors what the no-show outbound flow does with From=owned).
+export const TRANSFER_CALLER_ID =
+  process.env.IVR_TRANSFER_CALLER_ID || "+97233825488";
+
 export type LangCode = "en" | "es" | "he" | "de";
 
 export interface LangEntry {
@@ -172,7 +179,7 @@ export function connectAssistant(lang: LangEntry): Response {
 // Option 1: dial the human ops line; on no-answer run the fallback route.
 export function transferToOps(lang: LangEntry): Response {
   return texml(
-    `<Dial timeout="20" action="${PUBLIC_BASE}/api/texml/after-transfer?lang=${lang.code}" method="POST">` +
+    `<Dial timeout="20" callerId="${xmlEscape(TRANSFER_CALLER_ID)}" action="${PUBLIC_BASE}/api/texml/after-transfer?lang=${lang.code}" method="POST">` +
       `<Number>${xmlEscape(OPS_TRANSFER_NUMBER)}</Number>` +
       `</Dial>`
   );
