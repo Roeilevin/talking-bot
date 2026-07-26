@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getOrderDetails } from "@/lib/bein-harim";
+import { getOrderDetails, OrderNotFoundError } from "@/lib/bein-harim";
 import { sendWhatsAppTemplate } from "@/lib/converto";
 import { buildMapsLink, isPickupPassed } from "@/lib/pickup";
 
@@ -17,7 +17,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing 'order_id'" }, { status: 400 });
     }
 
-    const order = await getOrderDetails(Number(order_id));
+    let order;
+    try {
+      order = await getOrderDetails(Number(order_id));
+    } catch (err) {
+      // Unknown order number — let the assistant ask the caller to repeat it
+      // instead of hitting a generic tool failure.
+      if (err instanceof OrderNotFoundError) {
+        return NextResponse.json({
+          action: "order_not_found",
+          message:
+            "No booking matches that order number. Ask the caller to repeat it, then try again.",
+        });
+      }
+      throw err;
+    }
     console.log("[Tool: pickup-info] order", {
       tour_date: order.tour_date,
       pickup_time: order.pickup_time,

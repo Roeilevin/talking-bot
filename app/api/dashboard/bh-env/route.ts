@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAuthedRequest } from "@/lib/auth";
 import { getSetting, setSetting } from "@/lib/db";
 import { clearBhEnvCache } from "@/lib/bein-harim";
-import type { BhEnv } from "@/lib/config";
+import { config, type BhEnv } from "@/lib/config";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +15,19 @@ export async function GET() {
   }
   const raw = await getSetting("bh_env");
   const env: BhEnv = raw === "test" ? "test" : "production";
-  return NextResponse.json({ env });
+  // Also report which BH endpoint each slot resolves to. Vercel env vars are
+  // write-only once set, so this is the only way to see whether a slot points
+  // somewhere wrong. Keys are never returned — only whether one is present.
+  const endpoints = Object.fromEntries(
+    (Object.keys(config.beinHarim.environments) as BhEnv[]).map((name) => [
+      name,
+      {
+        baseUrl: config.beinHarim.environments[name].baseUrl,
+        keySet: !!config.beinHarim.environments[name].apiKey,
+      },
+    ])
+  );
+  return NextResponse.json({ env, endpoints });
 }
 
 // Switch the Bein Harim data environment. Body: { env: "production" | "test" }

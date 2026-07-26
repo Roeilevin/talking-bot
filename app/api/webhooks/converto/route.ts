@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getOrderDetails } from "@/lib/bein-harim";
+import { getOrderDetails, OrderNotFoundError } from "@/lib/bein-harim";
 import { sendWhatsAppMessage, notifyTeam, verifyConvertoSignature } from "@/lib/converto";
 import { startAssistantCall } from "@/lib/telnyx";
 import { insertCall, isPhoneAllowed } from "@/lib/db";
@@ -51,8 +51,22 @@ export async function POST(req: NextRequest) {
 
     const orderNumber = parseInt(messageText, 10);
 
-    // Fetch order details from Bein Harim
-    const order = await getOrderDetails(orderNumber);
+    // Fetch order details from Bein Harim. An unknown order number is the
+    // sender's mistake (or an order living in the other BH environment), so
+    // tell them rather than failing the webhook silently.
+    let order;
+    try {
+      order = await getOrderDetails(orderNumber);
+    } catch (err) {
+      if (err instanceof OrderNotFoundError) {
+        await sendWhatsAppMessage(
+          senderPhone,
+          `Order ${orderNumber} was not found. Please check the order number and try again.`
+        );
+        return NextResponse.json({ ok: true, reason: "order_not_found" });
+      }
+      throw err;
+    }
 
     // Check if tour date is today
     const today = new Date().toISOString().split("T")[0];

@@ -1,11 +1,23 @@
 // Bein Harim has two backends — production and a test/dev environment. The
 // active one is chosen at runtime by the dashboard toggle (persisted in
 // Supabase as the `bh_env` setting); see lib/bein-harim.ts getActiveBeinHarim().
-const BH_PROD_BASE =
-  process.env.BH_API_BASE_URL || "https://dev-v3.beinharimtours.com/api/v2";
+// Accept a base URL with or without the `/api/v2` suffix (and with stray
+// trailing slashes). Without this, a host-only value silently produces requests
+// to e.g. https://new.beinharimtours.com/booking/... which the site answers
+// with an HTML "Page Not found" page — and HTTP 200, so nothing looks wrong
+// until JSON parsing explodes.
+function normalizeBhBaseUrl(url: string): string {
+  const trimmed = url.trim().replace(/\/+$/, "");
+  return /\/api\/v\d+$/.test(trimmed) ? trimmed : `${trimmed}/api/v2`;
+}
+
+const BH_PROD_BASE = normalizeBhBaseUrl(
+  process.env.BH_API_BASE_URL || "https://dev-v3.beinharimtours.com/api/v2"
+);
 const BH_PROD_KEY = process.env.BH_API_KEY || "";
-const BH_TEST_BASE =
-  process.env.BH_API_BASE_URL_TEST || "https://dev-v3.beinharimtours.com/api/v2";
+const BH_TEST_BASE = normalizeBhBaseUrl(
+  process.env.BH_API_BASE_URL_TEST || "https://dev-v3.beinharimtours.com/api/v2"
+);
 const BH_TEST_KEY = process.env.BH_API_KEY_TEST || "";
 
 export type BhEnv = "production" | "test";

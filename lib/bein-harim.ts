@@ -38,6 +38,61 @@ export async function getActiveBeinHarim(): Promise<{
   return { env, ...config.beinHarim.environments[env] };
 }
 
+// Thrown when Bein Harim answers "no such order" (HTTP 404, or a 200 with
+// `error: "Order not found"`). Callers can catch this to reply with something
+// useful instead of surfacing a generic failure.
+export class OrderNotFoundError extends Error {
+  orderNumber: number;
+
+  constructor(orderNumber: number) {
+    super(`Bein Harim: order ${orderNumber} not found`);
+    this.name = "OrderNotFoundError";
+    this.orderNumber = orderNumber;
+  }
+}
+
+interface BhEnvelope<T> {
+  error: string | null;
+  data?: T;
+}
+
+// Call the Bein Harim API and parse the JSON envelope defensively.
+//
+// The API does NOT always answer with JSON: a request that misses the
+// `/api/v2` prefix (e.g. a misconfigured BH_API_BASE_URL) gets back an HTML
+// "Page Not found" page with HTTP **200**, which blows up JSON.parse with an
+// opaque SyntaxError. Parse the body ourselves so a wrong URL reports itself.
+async function bhRequest<T>(
+  path: string,
+  init?: RequestInit
+): Promise<BhEnvelope<T>> {
+  const { baseUrl, apiKey } = await getActiveBeinHarim();
+  const url = `${baseUrl}${path}`;
+  const res = await fetch(url, {
+    ...init,
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "BH-API-KEY": apiKey,
+      ...init?.headers,
+    },
+  });
+
+  const text = await res.text();
+  let json: BhEnvelope<T>;
+  try {
+    json = JSON.parse(text) as BhEnvelope<T>;
+  } catch {
+    // Non-JSON body — almost always a wrong base URL (HTML error page).
+    throw new Error(
+      `Bein Harim API returned non-JSON (${res.status}) from ${url}: ` +
+        `${text.slice(0, 100).replace(/\s+/g, " ").trim()}`
+    );
+  }
+
+  return json;
+}
+
 export interface OrderDetails {
   order_number: number;
   customer_first_name: string;
@@ -52,29 +107,16 @@ export interface OrderDetails {
   guide_language_name: string;
 }
 
-interface BeinHarimResponse {
-  error: string | null;
-  data: OrderDetails;
-}
-
 export async function getOrderDetails(orderNumber: number): Promise<OrderDetails> {
-  const { baseUrl, apiKey } = await getActiveBeinHarim();
-  const res = await fetch(
-    `${baseUrl}/booking/order_details/${orderNumber}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "BH-API-KEY": apiKey,
-      },
-    }
+  const json = await bhRequest<OrderDetails>(
+    `/booking/order_details/${orderNumber}`
   );
 
-  if (!res.ok) {
-    throw new Error(`Bein Harim API error: ${res.status} ${res.statusText}`);
+  // "Order not found" is a normal outcome (wrong/typo'd number, or an order
+  // that only exists in the other BH environment) — not a failure to report.
+  if (/not found/i.test(json.error || "") || !json.data) {
+    throw new OrderNotFoundError(orderNumber);
   }
-
-  const json: BeinHarimResponse = await res.json();
 
   if (json.error) {
     throw new Error(`Bein Harim API error: ${json.error}`);
@@ -91,25 +133,13 @@ export async function sendCheckoutNotification(
   orderId: number,
   message: string
 ): Promise<{ office_message_id?: number }> {
-  const { baseUrl, apiKey } = await getActiveBeinHarim();
-  const res = await fetch(
-    `${baseUrl}/booking/checkout_notification/${orderId}`,
+  const json = await bhRequest<{ office_message_id?: number }>(
+    `/booking/checkout_notification/${orderId}`,
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "BH-API-KEY": apiKey,
-      },
       body: JSON.stringify({ message }),
     }
   );
-
-  if (!res.ok) {
-    throw new Error(`Bein Harim API error: ${res.status} ${res.statusText}`);
-  }
-
-  const json: { error: string | null; data?: { office_message_id?: number } } =
-    await res.json();
 
   if (json.error) {
     throw new Error(`Bein Harim API error: ${json.error}`);
@@ -119,23 +149,15 @@ export async function sendCheckoutNotification(
 }
 
 export async function markOrderNoShow(orderId: number): Promise<void> {
-  const { baseUrl, apiKey } = await getActiveBeinHarim();
-  const res = await fetch(
-    `${baseUrl}/booking/change_order_status`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "BH-API-KEY": apiKey,
-      },
-      body: JSON.stringify({
-        order_id: orderId,
-        order_status: "non_show",
-      }),
-    }
-  );
+  const json = await bhRequest(`/booking/change_order_status`, {
+    method: "POST",
+    body: JSON.stringify({
+      order_id: orderId,
+      order_status: "non_show",
+    }),
+  });
 
-  if (!res.ok) {
-    throw new Error(`Bein Harim API error: ${res.status} ${res.statusText}`);
+  if (json.error) {
+    throw new Error(`Bein Harim API error: ${json.error}`);
   }
 }
