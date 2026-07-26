@@ -65,7 +65,7 @@ interface BhEnvelope<T> {
 async function bhRequest<T>(
   path: string,
   init?: RequestInit
-): Promise<BhEnvelope<T>> {
+): Promise<BhEnvelope<T> & { status: number }> {
   const { baseUrl, apiKey } = await getActiveBeinHarim();
   const url = `${baseUrl}${path}`;
   const res = await fetch(url, {
@@ -90,7 +90,7 @@ async function bhRequest<T>(
     );
   }
 
-  return json;
+  return { ...json, status: res.status };
 }
 
 export interface OrderDetails {
@@ -114,12 +114,20 @@ export async function getOrderDetails(orderNumber: number): Promise<OrderDetails
 
   // "Order not found" is a normal outcome (wrong/typo'd number, or an order
   // that only exists in the other BH environment) — not a failure to report.
-  if (/not found/i.test(json.error || "") || !json.data) {
+  // Match it narrowly: an auth failure ("Invalid API Key", HTTP 403) is also
+  // data-less, and must NOT be mistaken for a bad order number.
+  if (json.status === 404 || /order not found/i.test(json.error || "")) {
     throw new OrderNotFoundError(orderNumber);
   }
 
   if (json.error) {
-    throw new Error(`Bein Harim API error: ${json.error}`);
+    throw new Error(`Bein Harim API error: ${json.status} ${json.error}`);
+  }
+
+  if (!json.data) {
+    throw new Error(
+      `Bein Harim API error: ${json.status} response carried no order data`
+    );
   }
 
   return json.data;
@@ -141,8 +149,10 @@ export async function sendCheckoutNotification(
     }
   );
 
-  if (json.error) {
-    throw new Error(`Bein Harim API error: ${json.error}`);
+  if (json.error || json.status >= 400) {
+    throw new Error(
+      `Bein Harim API error: ${json.status} ${json.error || "request failed"}`
+    );
   }
 
   return { office_message_id: json.data?.office_message_id };
@@ -157,7 +167,9 @@ export async function markOrderNoShow(orderId: number): Promise<void> {
     }),
   });
 
-  if (json.error) {
-    throw new Error(`Bein Harim API error: ${json.error}`);
+  if (json.error || json.status >= 400) {
+    throw new Error(
+      `Bein Harim API error: ${json.status} ${json.error || "request failed"}`
+    );
   }
 }
