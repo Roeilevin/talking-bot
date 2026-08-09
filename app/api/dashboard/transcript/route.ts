@@ -1,15 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { DASH_COOKIE, isValidDashCookie } from "@/lib/auth";
+import { isAuthedRequest } from "@/lib/auth";
 import { getTranscriptByCallControlId, getTranscript } from "@/lib/telnyx";
 
 export const dynamic = "force-dynamic";
 
 // Lazy transcript fetch for an expanded dashboard row. Self-guards: route
-// handlers aren't covered by the page's auth redirect, so re-check the cookie.
+// handlers aren't covered by the page's auth redirect, so re-check the session.
 export async function GET(req: NextRequest) {
-  const cookieStore = await cookies();
-  if (!isValidDashCookie(cookieStore.get(DASH_COOKIE)?.value)) {
+  if (!(await isAuthedRequest())) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

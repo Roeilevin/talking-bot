@@ -1,9 +1,7 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import Link from "next/link";
-import { DASH_COOKIE, isValidDashCookie } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 import { listCalls, listWhatsAppSends, getSetting, type CallRow, type WhatsAppSendRow } from "@/lib/db";
 import { listInboundConversations, type InboundConversation } from "@/lib/telnyx";
+import NavMenu from "../components/NavMenu";
 import ExpandableRow from "./ExpandableRow";
 import BhEnvToggle from "./BhEnvToggle";
 import styles from "./dashboard.module.css";
@@ -31,10 +29,7 @@ function cls(prefix: string, value: string | null | undefined): string {
 
 export default async function DashboardPage() {
   // Defense in depth: proxy is optimistic, re-verify here.
-  const cookieStore = await cookies();
-  if (!isValidDashCookie(cookieStore.get(DASH_COOKIE)?.value)) {
-    redirect("/login?next=/dashboard");
-  }
+  const user = await requireUser("/dashboard");
 
   const [calls, sends, inbound, bhEnvRaw] = await Promise.all([
     listCalls(200),
@@ -45,7 +40,9 @@ export default async function DashboardPage() {
   const bhEnv: "production" | "test" = bhEnvRaw === "test" ? "test" : "production";
 
   return (
-    <div className={styles.page}>
+    <>
+      <NavMenu email={user.email} />
+      <div className={styles.page}>
       {bhEnv === "test" && (
         <div className={styles.testBanner}>
           ⚠️ TEST environment active — the bot is reading/writing the Bein Harim
@@ -54,21 +51,7 @@ export default async function DashboardPage() {
       )}
       <div className={styles.header}>
         <h1>Talking Bot — History</h1>
-        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-          <BhEnvToggle initialEnv={bhEnv} />
-          <Link
-            href="/allowed-numbers"
-            className={styles.logout}
-            style={{ textDecoration: "none", display: "inline-block" }}
-          >
-            Allowed numbers
-          </Link>
-          <form method="POST" action="/api/logout">
-            <button type="submit" className={styles.logout}>
-              Sign out
-            </button>
-          </form>
-        </div>
+        <BhEnvToggle initialEnv={bhEnv} />
       </div>
 
       {/* Outbound no-show calls */}
@@ -209,6 +192,7 @@ export default async function DashboardPage() {
           </table>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }

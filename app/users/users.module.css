@@ -1,0 +1,170 @@
+.page {
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.intro {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  line-height: 1.5;
+  margin: 0 0 1.75rem;
+}
+
+.addForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.input {
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #8886;
+  background: transparent;
+  color: inherit;
+  font-size: 0.9rem;
+  min-width: 220px;
+}
+
+.primaryBtn {
+  border: none;
+  background: #0070f3;
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.primaryBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.hint {
+  font-size: 0.72rem;
+  opacity: 0.55;
+  display: block;
+  margin-bottom: 1.25rem;
+}
+
+.ok {
+  color: #30a46c;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+.err {
+  color: #e5484d;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+  border: 1px solid #8883;
+  border-radius: 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 0.55rem 0.85rem;
+  border-bottom: 1px solid #8882;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.table th {
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.you {
+  font-size: 0.7rem;
+  border: 1px solid #8886;
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  margin-left: 0.4rem;
+  opacity: 0.7;
+}
+
+.badgeOk {
+  color: #30a46c;
+  font-size: 0.8rem;
+}
+.badgeOff {
+  color: #e5484d;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.smallBtn {
+  border: 1px solid #8886;
+  background: transparent;
+  color: inherit;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.smallBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.deleteBtn {
+  border: 1px solid #e5484d55;
+  background: transparent;
+  color: #e5484d;
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.muted {
+  opacity: 0.5;
+}
+
+.empty {
+  padding: 1.25rem 0.85rem;
+  opacity: 0.6;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.warn {
+  border: 1px solid #b4530955;
+  background: #b4530922;
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}

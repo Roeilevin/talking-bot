@@ -51,6 +51,11 @@ export const config = {
   supabase: {
     url: process.env.SUPABASE_URL || "",
     serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || "",
+    // Public-facing key used only for Supabase Auth (dashboard sign-in). Safe to
+    // expose; it grants nothing beyond RLS. Accepts either the modern
+    // sb_publishable_… key or the legacy anon JWT.
+    publishableKey:
+      process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || "",
   },
   // Microsoft Graph (app-only) for sending email from the info@ shared mailbox.
   // Used as the fallback delivery channel for callers who don't use WhatsApp.
@@ -60,8 +65,13 @@ export const config = {
     clientSecret: process.env.MS_CLIENT_SECRET || "",
     senderMailbox: process.env.MS_SENDER_MAILBOX || "info@beinharimtours.com",
   },
-  // Shared password gating the /dashboard history page.
-  dashboardPassword: process.env.DASHBOARD_PASSWORD || "",
+  // Optional allowlist gating who may sign in to the dashboard. Comma-separated
+  // emails; when empty, ANY user in the Supabase project's auth.users can sign
+  // in — so keep Supabase signups disabled, or set this.
+  dashboardAllowedEmails: (process.env.DASHBOARD_ALLOWED_EMAILS || "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean),
   // WhatsApp number of the guide / operations team that receives call status updates
   opsWhatsAppNumber:
     process.env.OPS_WHATSAPP_NUMBER ||
@@ -85,7 +95,9 @@ export function validateConfig() {
   const softMissing: string[] = [];
   if (!config.supabase.url) softMissing.push("SUPABASE_URL");
   if (!config.supabase.serviceRoleKey) softMissing.push("SUPABASE_SERVICE_ROLE_KEY");
-  if (!config.dashboardPassword) softMissing.push("DASHBOARD_PASSWORD");
+  // Without the publishable key there is no way to sign in — the dashboard
+  // stays locked rather than falling open.
+  if (!config.supabase.publishableKey) softMissing.push("SUPABASE_PUBLISHABLE_KEY");
   if (softMissing.length > 0) {
     console.warn(
       `[config] Dashboard/history disabled — missing: ${softMissing.join(", ")}`

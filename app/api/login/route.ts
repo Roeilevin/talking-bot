@@ -1,39 +1,66 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { config } from "@/lib/config";
 import {
-  DASH_COOKIE,
-  expectedDashToken,
-  timingSafeEqualStr,
+  createSupabaseRequestClient,
+  isUserAllowed,
+  safeNextPath,
+  supabaseAuthConfigured,
 } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
+// Email + password sign-in against Supabase Auth. Runs server-side so the
+// publishable key never has to reach the browser; the session cookies are
+// written onto this response by @supabase/ssr.
 export async function POST(req: NextRequest) {
-  const form = await req.formData();
-  const password = String(form.get("password") || "");
-  const next = String(form.get("next") || "/dashboard");
-  // Only allow same-origin relative redirects.
-  const target = next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
-
-  const ok =
-    !!config.dashboardPassword &&
-    timingSafeEqualStr(password, config.dashboardPassword);
-
-  if (!ok) {
-    const url = new URL("/login", req.url);
-    url.searchParams.set("error", "1");
-    if (target !== "/dashboard") url.searchParams.set("next", target);
-    return NextResponse.redirect(url, { status: 303 });
+  if (!supabaseAuthConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          "Sign-in is not configured — SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY are missing.",
+      },
+      { status: 503 }
+    );
   }
 
-  (await cookies()).set(DASH_COOKIE, expectedDashToken(), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+  let body: Record<string, unknown> = {};
+  try {
+    body = (await req.json()) as Record<string, unknown>;
+  } catch {
+    return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+  }
+
+  const email = String(body.email ?? "").trim();
+  const password = String(body.password ?? "");
+  const next = safeNextPath(body.next);
+
+  if (!email || !password) {
+    return NextResponse.json(
+      { error: "Email and password are required." },
+      { status: 400 }
+    );
+  }
+
+  const supabase = await createSupabaseRequestClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
   });
 
-  return NextResponse.redirect(new URL(target, req.url), { status: 303 });
+  if (error || !data.user) {
+    // Deliberately vague: don't reveal which accounts exist.
+    return NextResponse.json(
+      { error: "Incorrect email or password." },
+      { status: 401 }
+    );
+  }
+
+  if (!isUserAllowed(data.user)) {
+    await supabase.auth.signOut();
+    return NextResponse.json(
+      { error: "This account may not access the dashboard." },
+      { status: 403 }
+    );
+  }
+
+  return NextResponse.json({ ok: true, next });
 }
