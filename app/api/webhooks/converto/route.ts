@@ -1,8 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getOrderDetails, OrderNotFoundError } from "@/lib/bein-harim";
+import {
+  ensureOrderStatus,
+  getOrderDetails,
+  OrderNotFoundError,
+  sendCheckoutNotification,
+} from "@/lib/bein-harim";
 import { sendWhatsAppMessage, notifyTeam, verifyConvertoSignature } from "@/lib/converto";
+import { config } from "@/lib/config";
+import {
+  GUIDE_JOINED_BUTTON,
+  GUIDE_NOSHOW_KIND,
+  readGuideJoined,
+} from "@/lib/guide-alert";
 import { startAssistantCall } from "@/lib/telnyx";
-import { insertCall, isPhoneAllowed } from "@/lib/db";
+import {
+  findRecentSendOrder,
+  insertCall,
+  isPhoneAllowed,
+  updateCallOutcome,
+} from "@/lib/db";
+
+// How far back a tapped "התייר הצטרף" may refer. The alert goes out on the day
+// of the tour, so a day is generous — anything older is someone scrolling up,
+// and must not re-open a closed order.
+const GUIDE_REPLY_WINDOW_HOURS = 24;
 
 // Run a notification without letting it fail the request. A messaging error must
 // never escalate a handled failure into a 500: Converto retries 5xx deliveries,
@@ -38,6 +59,154 @@ function describeFailure(err: unknown): string {
   return raw.slice(0, 400);
 }
 
+// Shapes an inbound WhatsApp message arrives in. A tapped template button comes
+// back as a reply carrying the button's text, but which field holds it depends
+// on the message type — `button` for a template quick reply,
+// `interactive.button_reply` for an interactive one, plain text when the guide
+// typed the words instead — so read all of them.
+interface InboundMessage {
+  type?: string;
+  from?: string;
+  text?: string | { body?: string };
+  button?: { text?: string; payload?: string };
+  interactive?: { button_reply?: { id?: string; title?: string } };
+}
+
+// The button's machine id, when the tap carried one. Read separately from the
+// visible text because only the id pins the reply to an order.
+function readButtonPayload(message: InboundMessage): string {
+  return String(
+    message.button?.payload || message.interactive?.button_reply?.id || ""
+  ).trim();
+}
+
+function readMessageText(message: InboundMessage): string {
+  const raw =
+    (typeof message.text === "string" ? message.text : message.text?.body) ||
+    message.button?.text ||
+    message.button?.payload ||
+    message.interactive?.button_reply?.title ||
+    message.interactive?.button_reply?.id ||
+    "";
+  return String(raw).trim();
+}
+
+// A guide answered a no-show alert with "התייר הצטרף": the traveller did board
+// after all. Which order that refers to comes from the alert we sent that same
+// number — it is logged with the order number, so nothing extra is tracked.
+//
+// The correction is the order status going back to `approved` (BH_SHOW_STATUS)
+// — the same call the office would make by hand. A back-office message goes out
+// alongside it as the audit trail, and carries the "do this manually" ask if the
+// status change failed.
+async function handleGuideJoined(
+  senderPhone: string,
+  replyText: string,
+  fromPayload: number | null
+): Promise<NextResponse> {
+  // An interactive button carries the order in its id, so it needs no lookup.
+  // A template quick reply carries only its text — then fall back to the alert
+  // we sent this number (logged with the order number).
+  const orderNumber =
+    fromPayload ??
+    (await findRecentSendOrder(
+      senderPhone,
+      GUIDE_NOSHOW_KIND,
+      GUIDE_REPLY_WINDOW_HOURS
+    ));
+
+  if (!orderNumber) {
+    console.warn(
+      `[Converto Webhook] guide-joined reply from ${senderPhone} matched no recent alert`
+    );
+    await bestEffort("guide-joined unmatched notice", () =>
+      notifyTeam(
+        undefined,
+        `👤 מדריך (${senderPhone}) דיווח "${replyText}" אך לא נמצאה התראת אי-הגעה מתאימה מ-24 השעות האחרונות — נא לטפל ידנית.`
+      )
+    );
+    await bestEffort("guide-joined unmatched reply", () =>
+      sendWhatsAppMessage(
+        senderPhone,
+        "לא הצלחנו לזהות לאיזו הזמנה ההודעה מתייחסת. נא לפנות למשרד עם מספר ההזמנה."
+      )
+    );
+    return NextResponse.json({ ok: true, reason: "guide_joined_unmatched" });
+  }
+
+  // Correct the dashboard first: it is the record that survives a messaging
+  // failure, and "coming" is exactly what the guide is reporting.
+  await updateCallOutcome(orderNumber, "coming", `המדריך דיווח: ${replyText}`);
+
+  // Put the order back the way it was BEFORE telling anyone: the status is the
+  // thing that decides whether the traveller is treated as a no-show, and the
+  // office message below reports on whether this worked.
+  // BH can refuse the change on business grounds — an unpaid booking answers
+  // 400 "Order can not be approved: Booking payment status should not be - Not
+  // Completed". That is not our bug to swallow: the reason travels into the
+  // office message and the ops update so somebody can act on it.
+  let statusReverted = false;
+  let alreadyThere = false;
+  let revertError = "";
+  try {
+    const { changed } = await ensureOrderStatus(orderNumber, config.beinHarim.showStatus);
+    statusReverted = true;
+    alreadyThere = !changed;
+  } catch (e) {
+    revertError = (e instanceof Error ? e.message : String(e))
+      .replace(/^Bein Harim API error: \d+ /, "")
+      .slice(0, 300);
+    console.error("[Converto Webhook] guide-joined status revert failed", e);
+  }
+
+  let officeNotified = false;
+  await bestEffort("guide-joined office notification", async () => {
+    await sendCheckoutNotification(
+      orderNumber,
+      statusReverted
+        ? `המדריך דיווח שהנוסע הצטרף לטיול בפועל — סטטוס ההזמנה הוחזר ל-${config.beinHarim.showStatus}.`
+        : `המדריך דיווח שהנוסע הצטרף לטיול בפועל — החזרת הסטטוס נכשלה${
+            revertError ? ` (${revertError})` : ""
+          }, יש לבטל את סימון אי-ההגעה (no-show) בהזמנה ${orderNumber} ידנית.`
+    );
+    officeNotified = true;
+  });
+
+  console.log(
+    `[Guide Joined] order=${orderNumber} guide=${senderPhone} office=${officeNotified} status_reverted=${statusReverted}`
+  );
+
+  await bestEffort("guide-joined ops notice", () =>
+    notifyTeam(
+      undefined,
+      `✅ הזמנה ${orderNumber}: המדריך (${senderPhone}) דיווח שהתייר הצטרף לטיול.` +
+        (statusReverted
+          ? alreadyThere
+            ? ` סטטוס ההזמנה כבר היה ${config.beinHarim.showStatus} — לא נדרש שינוי.`
+            : ` סטטוס ההזמנה הוחזר ל-${config.beinHarim.showStatus}.`
+          : officeNotified
+          ? ` ⚠️ החזרת הסטטוס נכשלה${
+              revertError ? `: ${revertError}` : ""
+            } — נשלחה בקשה למשרד לבטל את סימון אי-ההגעה.`
+          : " ⚠️ החזרת הסטטוס נכשלה וגם עדכון המשרד נכשל — נא לטפל ידנית.")
+    )
+  );
+
+  await bestEffort("guide-joined ack", () =>
+    sendWhatsAppMessage(
+      senderPhone,
+      `תודה! עדכנו שהתייר הצטרף לטיול בהזמנה ${orderNumber}.`,
+      { direction: "ops", kind: "guide_joined_ack", orderNumber }
+    )
+  );
+
+  return NextResponse.json({
+    ok: true,
+    guide_joined: true,
+    order_number: orderNumber,
+  });
+}
+
 export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text();
@@ -58,13 +227,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
-    const message = body.message;
-    if (!message || message.type !== "text" || !message.text) {
+    const message: InboundMessage | undefined = body.message;
+    if (!message) {
       return NextResponse.json({ ok: true });
     }
 
-    const messageText: string = message.text.trim();
-    const senderPhone: string = message.from;
+    const senderPhone: string = message.from || "";
+    const messageText = readMessageText(message);
+    if (!senderPhone || !messageText) {
+      return NextResponse.json({ ok: true });
+    }
+
+    // A guide answering a no-show alert — checked before the 6-digit branch
+    // because it arrives from a number that is NOT on the caller allowlist: the
+    // authorisation is that we messaged that number about this order minutes
+    // ago, and the only thing the reply can do is flag a wrongly-marked order.
+    // Prefer the button id ("guide_joined:394118") — it names the order. The
+    // visible text ("התייר הצטרף") is the fallback, and covers a template
+    // quick reply, which carries no payload at all.
+    const byPayload = readGuideJoined(readButtonPayload(message));
+    const guideJoined = byPayload.joined ? byPayload : readGuideJoined(messageText);
+    if (guideJoined.joined) {
+      // The payload id is machine text ("guide_joined:394118") — report the
+      // button's own wording back to ops instead.
+      return await handleGuideJoined(
+        senderPhone,
+        byPayload.joined ? GUIDE_JOINED_BUTTON : messageText,
+        guideJoined.orderNumber
+      );
+    }
 
     // Must be exactly 6 digits (order number)
     if (!/^\d{6}$/.test(messageText)) {
@@ -192,7 +383,7 @@ export async function POST(req: NextRequest) {
     await bestEffort("call-started notice", () =>
       notifyTeam(
         senderPhone,
-        `📞 הזמנה ${orderNumber} – ${customerName}: מתקשרים ללקוח.\n` +
+        `📞 הזמנה ${orderNumber} – ${customerName}: מתקשרים ללקוח (${order.customer_phone}).\n` +
           `סיור ${order.tour_date}, איסוף ${order.pickup_hotel} ${order.pickup_city} בשעה ${order.pickup_time}.`
       )
     );

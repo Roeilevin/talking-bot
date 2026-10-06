@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendCheckoutNotification } from "@/lib/bein-harim";
+import { addOrderComment, sendCheckoutNotification } from "@/lib/bein-harim";
 import { insertWhatsAppSend } from "@/lib/db";
 
 // Called by the Telnyx AI assistant to forward a customer's request/message to
@@ -21,6 +21,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Comment first (best-effort): it is the record on the order itself, and
+    // must land even if the bell notification below fails.
+    await addOrderComment(Number(order_id), String(message));
     const { office_message_id } = await sendCheckoutNotification(
       Number(order_id),
       String(message)

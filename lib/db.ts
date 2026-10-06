@@ -214,6 +214,43 @@ export async function insertWhatsAppSend(input: NewWhatsAppSend): Promise<void> 
   }
 }
 
+// Order number of the most recent WhatsApp send of `kind` to this recipient.
+// Used to answer "which order is this guide replying about?" — the guide alert
+// is logged with the order number, so the reply needs no state of its own.
+// Returns null when nothing matches, when Supabase is unavailable, or when the
+// send is older than `withinHours` (a tap on last week's message must not
+// re-open a closed order).
+export async function findRecentSendOrder(
+  recipient: string,
+  kind: string,
+  withinHours = 24
+): Promise<number | null> {
+  const sb = db();
+  if (!sb) return null;
+  const target = normalizePhone(recipient);
+  if (!target) return null;
+  try {
+    const since = new Date(Date.now() - withinHours * 3600_000).toISOString();
+    const { data, error } = await sb
+      .from(SENDS)
+      .select("recipient, order_number, created_at")
+      .eq("kind", kind)
+      .gte("created_at", since)
+      .order("created_at", { ascending: false })
+      .limit(200);
+    if (error) throw error;
+    // Recipients are stored as sent, so normalize both sides before comparing.
+    const hit = (data ?? []).find(
+      (r: { recipient: string; order_number: number | null }) =>
+        normalizePhone(r.recipient) === target && r.order_number != null
+    );
+    return (hit?.order_number as number | undefined) ?? null;
+  } catch (e) {
+    console.error("[db] findRecentSendOrder failed", e);
+    return null;
+  }
+}
+
 // ---- Reads (dashboard). Return [] on any failure. ----
 
 export async function listCalls(limit = 100): Promise<CallRow[]> {

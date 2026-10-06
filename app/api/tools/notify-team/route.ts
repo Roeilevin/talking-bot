@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { addOrderComment } from "@/lib/bein-harim";
 import { notifyTeam } from "@/lib/converto";
 import { updateCallOutcome } from "@/lib/db";
 
@@ -46,6 +47,7 @@ export async function POST(req: NextRequest) {
       await updateCallOutcome(Number(order_id), event, eta || note);
     }
 
+    await addOrderComment(Number(order_id), message);
     await notifyTeam(team_phone, message);
 
     return NextResponse.json({ ok: true, message: "Team notified" });

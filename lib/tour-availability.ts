@@ -10,7 +10,15 @@
 // language_availability. See memory: tours-availability-api.
 
 import { getActiveBeinHarim } from "./bein-harim";
-import { TOURS, affiliateUrl, type Tour } from "./tours";
+import {
+  TOURS,
+  affiliateUrl,
+  fitTemplateList,
+  formatDepartureDays,
+  tourHighlights,
+  type Tour,
+} from "./tours";
+import { PICKUP_MAY_CHANGE_WRITTEN } from "./pickup";
 import tourTypesRaw from "@/data/tour-types.json";
 import languagesRaw from "@/data/languages.json";
 import visitPlacesRaw from "@/data/visit-places.json";
@@ -213,6 +221,8 @@ export type AvailabilityParams = {
   limit?: number;
 };
 
+export type PickupPoint = { area: string; time: string };
+
 export type AvailableTour = {
   tourNum: string;
   name: string;
@@ -225,6 +235,18 @@ export type AvailableTour = {
   fromPrice: number | null;
   priceUnit: string | null;
   url: string | null;
+  // Which days the tour departs, e.g. "Every day" or "Mon, Wed, Sat". Derived
+  // from language_availability for the language the caller asked about (it
+  // differs per language), falling back to the scraped catalog.
+  departureDays: string | null;
+  // Where and when the bus actually leaves: BH gives one meeting point per
+  // pickup *area* with a fixed time — there is no hotel-by-hotel pickup. These
+  // are the standard times, not a promise: the traveler's final pickup is
+  // confirmed on their order confirmation (see PICKUP_MAY_CHANGE_*).
+  pickups: PickupPoint[];
+  // The main sights, from the scraped catalog — the API has no description, and
+  // a shortlist of bare names tells the caller nothing about the tours.
+  highlights: string[];
   // BH recommendation score (higher = listed first); null if unscored.
   score: number | null;
 };
@@ -250,6 +272,48 @@ const TYPE_NAME = new Map<string, string>(TOUR_TYPES.map((t) => [t.id, t.name]))
 function parseScore(s?: number | string): number | null {
   const n = Number(s);
   return Number.isFinite(n) ? n : null;
+}
+
+// language_availability is keyed by day-of-week flags per language:
+//   { en: { sun: "1", mon: "1", ... }, fr: { sun: "0", mon: "1", ... } }
+// so departure days are language-specific — an English departure every day may
+// be a Monday/Thursday departure in French.
+const DAY_KEYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
+const DAY_NAMES: Record<string, string> = {
+  sun: "Sunday", mon: "Monday", tue: "Tuesday", wed: "Wednesday",
+  thu: "Thursday", fri: "Friday", sat: "Saturday",
+};
+
+function departureDaysFor(
+  la: Record<string, Record<string, string>> | undefined,
+  shortName: string
+): string | null {
+  const days = la?.[shortName];
+  if (!days) return null;
+  const running = DAY_KEYS.filter((d) => String(days[d]) === "1");
+  if (!running.length) return null;
+  if (running.length === 7) return "Every day";
+  // "Monday, Wednesday and Saturday" — a bare comma list runs into the price
+  // that follows it, both on the page and in the voice.
+  const names = running.map((d) => DAY_NAMES[d]);
+  return names.length === 1
+    ? names[0]
+    : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
+// BH's pick_up rows are { pu_area, pu_time, base_price, biz_price } — one fixed
+// meeting point and departure time per area.
+function pickupPoints(pickUp?: Array<Record<string, string>>): PickupPoint[] {
+  const seen = new Set<string>();
+  const out: PickupPoint[] = [];
+  for (const p of pickUp || []) {
+    const area = AREA_NAME.get(String(p.pu_area)) || "";
+    const time = String(p.pu_time || "").trim();
+    if (!area || !time || seen.has(area)) continue;
+    seen.add(area);
+    out.push({ area, time });
+  }
+  return out.sort((a, b) => a.time.localeCompare(b.time));
 }
 
 function langsOffered(la?: Record<string, Record<string, string>>): string[] {
@@ -372,6 +436,11 @@ export async function getTourAvailability(params: AvailabilityParams): Promise<A
       fromPrice: price,
       priceUnit: unit,
       url: catalog ? affiliateUrl(catalog.url) : null,
+      departureDays:
+        departureDaysFor(t.language_availability, language?.short_name ?? "en") ??
+        formatDepartureDays(catalog?.departureDays),
+      pickups: pickupPoints(t.pick_up),
+      highlights: catalog ? tourHighlights(catalog, 3) : [],
       score: parseScore(t.score),
     };
   });
@@ -398,35 +467,130 @@ function priceLabel(t: AvailableTour): string {
   return ` from $${t.fromPrice}${t.priceUnit ? " " + t.priceUnit : ""}`;
 }
 
-// A compact brief for the assistant to read/paraphrase on the call. We keep the
-// pickup *area* (not the arbitrary matched place) and never include URLs (the
-// caller is on the phone).
+// ---- voice pacing ---------------------------------------------------------
+// TTS takes its pauses from sentence punctuation. The old list was one long
+// sentence with ")" numbering, em-dashes and semicolons between items, so on a
+// busy destination (Masada/Dead Sea matches a dozen tours) the assistant read
+// five options in a single breath and sounded rushed. One option per sentence,
+// capped at three, gives the voice a real pause between each.
+const VOICE_LIST_MAX = 3;
+const ORDINALS = ["First", "Second", "Third"];
+const NUMBER_WORDS = ["", "one", "two", "three"];
+
+// Tour names carry catalogue punctuation ("Masada, Ein Gedi & Dead Sea Tour")
+// that reads badly aloud; "&" in particular is unreliable across TTS voices.
+function sayable(name: string): string {
+  return String(name || "")
+    .replace(/&/g, " and ")
+    .replace(/\s+/g, " ")
+    .replace(/[.\s]+$/, "")
+    .trim();
+}
+
+function spokenPrice(t: AvailableTour): string {
+  if (t.fromPrice == null) return "";
+  return ` From ${t.fromPrice} dollars${t.priceUnit ? " " + t.priceUnit : ""}.`;
+}
+
+// The exact words to say on the call — no URLs (the caller is on the phone) and
+// no coaching for the model, which belongs in the tool result's `message`.
+// The pickup we quote is the *area*, not the arbitrary matched place.
 export function summarizeForVoice(r: AvailabilityResult): string {
   const { resolved, tours } = r;
   if (!tours.length) {
-    return `No tours match those criteria between ${prettyDate(resolved.from)} and ${prettyDate(resolved.to)}. Offer to broaden the dates, destination, or tour type.`;
+    return `No tours match those criteria between ${prettyDate(resolved.from)} and ${prettyDate(resolved.to)}.`;
   }
   const where = resolved.destination ? ` to ${resolved.destination.label}` : "";
   const pick = resolved.pickup ? ` with pickup in ${resolved.pickup.area}` : "";
   const type = resolved.tourType ? ` ${resolved.tourType.name.replace(/s$/, "").toLowerCase()}` : "";
   const lang = resolved.language ? ` in ${resolved.language.full_name}` : "";
   const head = `Found ${tours.length}${type} option${tours.length === 1 ? "" : "s"}${where}${pick}${lang}, available between ${prettyDate(resolved.from)} and ${prettyDate(resolved.to)}.`;
-  const items = tours
-    .map((t, i) => `${i + 1}) ${t.name} — ${t.durationDays} day${t.durationDays === 1 ? "" : "s"}${priceLabel(t)}`)
-    .join("; ");
-  return `${head} ${items}.`;
+
+  const shown = tours.slice(0, VOICE_LIST_MAX);
+  const lead = tours.length > shown.length ? ` Here are the top ${NUMBER_WORDS[shown.length]}.` : "";
+  const items = shown
+    .map((t, i) => {
+      const days = `${t.durationDays} day${t.durationDays === 1 ? "" : "s"}`;
+      return `${ORDINALS[i]}, ${sayable(t.name)}. ${days}.${spokenDays(t)}${spokenPrice(t)}${spokenHighlights(t)}`;
+    })
+    .join(" ");
+  return `${head}${lead} ${items}`;
+}
+
+// What you actually see on it. A shortlist of names, durations and prices left
+// the caller no way to choose between two tours that sound alike, so each option
+// names its main sights — two, in their own sentence, to keep the pacing.
+function spokenHighlights(t: AvailableTour): string {
+  const h = t.highlights.slice(0, 2);
+  if (!h.length) return "";
+  return ` Visits ${h.length === 1 ? h[0] : `${h[0]} and ${h[1]}`}.`;
+}
+
+// When it runs. Callers ask this constantly and the answer was never spoken,
+// so it belongs in the shortlist itself. "Every day" is the common case and
+// stays short; a restricted schedule is the part worth hearing.
+function spokenDays(t: AvailableTour): string {
+  if (!t.departureDays) return "";
+  return t.departureDays.trim().toLowerCase() === "every day"
+    ? " Departs every day."
+    : ` Departs ${t.departureDays}.`;
+}
+
+// One written line per tour, used for both WhatsApp and email. Covers EVERY
+// tour we recommended, not just the ones read aloud — a caller who asks for the
+// options in writing expects the whole shortlist, with the days it runs and
+// enough of a description to tell two similar-sounding tours apart.
+export function writtenLines(r: AvailabilityResult): string[] {
+  return r.tours.map((t) => {
+    const link = t.url ? ` ${t.url}` : "";
+    return `${t.name} (#${t.tourNum}). ${factsLine(t)}${visitsLine(t) ? ` ${visitsLine(t)}` : ""}${link}`;
+  });
+}
+
+// "1 day, departs every day, from $121 per person."
+function factsLine(t: AvailableTour): string {
+  const parts = [`${t.durationDays} day${t.durationDays === 1 ? "" : "s"}`];
+  if (t.departureDays) {
+    parts.push(
+      t.departureDays.trim().toLowerCase() === "every day"
+        ? "departs every day"
+        : `departs ${t.departureDays}`
+    );
+  }
+  const price = priceLabel(t).trim();
+  if (price) parts.push(price);
+  return `${parts.join(", ")}.`;
+}
+
+function visitsLine(t: AvailableTour): string {
+  return t.highlights.length ? `Visits ${t.highlights.join(", ")}.` : "";
+}
+
+// Plain fallback lines — name, number and link only — for when the descriptions
+// push the template body past WhatsApp's limit (see fitTemplateList).
+function plainLines(r: AvailabilityResult): string[] {
+  return r.tours.map((t) => `${t.name} (#${t.tourNum})${t.url ? ` ${t.url}` : ""}`);
 }
 
 // Two template params for a business-initiated WhatsApp list (no newlines/tabs
-// allowed inside a param — joined with "; "). {{1}} = summary, {{2}} = list.
+// allowed inside a param). {{1}} = summary, {{2}} = list.
 export function listForWhatsApp(r: AvailabilityResult): { summary: string; list: string } {
   const where = r.resolved.destination ? ` to ${r.resolved.destination.label}` : "";
   const summary = `${r.tours.length} tour${r.tours.length === 1 ? "" : "s"}${where} (${prettyDate(r.resolved.from)}–${prettyDate(r.resolved.to)})`;
-  const list = r.tours
-    .map((t) => {
-      const link = t.url ? ` ${t.url}` : "";
-      return `${t.name} (#${t.tourNum}, ${t.durationDays}d${priceLabel(t)})${link}`;
-    })
-    .join("; ");
-  return { summary, list };
+  return { summary, list: fitTemplateList(writtenLines(r), plainLines(r)) };
+}
+
+// The multi-line form for an open WhatsApp session or an email body: one block
+// per tour, and the pickup caveat whenever we quoted pickup times, since these
+// are the standard departures rather than the traveler's confirmed pickup.
+export function writtenList(r: AvailabilityResult): string {
+  const where = r.resolved.destination ? ` to ${r.resolved.destination.label}` : "";
+  const head = `Here ${r.tours.length === 1 ? "is the tour" : `are the ${r.tours.length} tours`}${where} we discussed:`;
+  const blocks = r.tours.map((t) =>
+    [`${t.name} (tour #${t.tourNum})`, factsLine(t), visitsLine(t), t.url]
+      .filter(Boolean)
+      .join("\n")
+  );
+  const anyPickups = r.tours.some((t) => t.pickups.length);
+  return [head, "", blocks.join("\n\n"), ...(anyPickups ? ["", PICKUP_MAY_CHANGE_WRITTEN] : [])].join("\n");
 }

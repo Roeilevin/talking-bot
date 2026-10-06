@@ -46,7 +46,10 @@ const ENVS = {
   },
 };
 
-const { base: BASE, key: KEY } = ENVS[TARGET] || ENVS.test;
+const { base: RAW_BASE, key: KEY } = ENVS[TARGET] || ENVS.test;
+// Same normalization as lib/config.ts: tolerate a base URL without /api/v2.
+const trimmed = RAW_BASE.trim().replace(/\/+$/, "");
+const BASE = /\/api\/v\d+$/.test(trimmed) ? trimmed : `${trimmed}/api/v2`;
 
 if (!KEY) {
   console.error(
@@ -98,7 +101,11 @@ try {
     console.log(`RESULT: ❌ FAIL — non-2xx status (${res.status}). The bot would throw here.`);
     process.exit(2);
   }
-  if (json && json.error) {
+  if (!json) {
+    console.log("RESULT: ❌ FAIL — non-JSON body (wrong URL?). The bot would throw here.");
+    process.exit(2);
+  }
+  if (json.error) {
     console.log(`RESULT: ❌ FAIL — API returned error: ${json.error}. The bot would throw here.`);
     process.exit(2);
   }

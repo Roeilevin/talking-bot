@@ -35,6 +35,46 @@ cannot reach the dashboard. There is deliberately no signup route in the app.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Guide no-show alert
+
+When an order is marked no-show — by the assistant's `mark_noshow` tool, or
+automatically after the customer misses `MAX_CALL_ATTEMPTS` calls — the guide
+running that day's tour gets a WhatsApp message naming the order and the
+traveller, with a **"התייר הצטרף"** quick-reply button for the case where the
+traveller did board after all.
+
+The guide's phone comes from `order_details` → `days[].guide.phone` (matched to
+the tour date, see `guideForDate` in `lib/bein-harim.ts`). It is often empty —
+then nobody is messaged and the ops update says so; the no-show itself is
+unaffected. Nothing here can fail a no-show: `lib/guide-alert.ts` never throws.
+
+The message is business-initiated, so it goes out as the approved template
+`guide_noshow_alert` (Hebrew, params: guide name / order number / traveller),
+falling back to free text if the template is rejected. Create it once with:
+
+```bash
+node scripts/create-guide-noshow-template.mjs
+```
+
+Send yourself a real one first — same channel, same payload, same template as
+production (creates the template if it is missing):
+
+```bash
+node scripts/send-guide-noshow-test.mjs 0504425422
+```
+
+
+A tap on the button comes back through `/api/webhooks/converto` as an ordinary
+inbound message carrying the button's text. The order it refers to is resolved
+from the alert we sent that number (looked up in `talking_bot_whatsapp_sends` by
+`kind = guide_noshow_alert`, within 24h) — so guides need no allowlist entry and
+no state is tracked. The reply then: corrects the call outcome to `coming`,
+posts a back-office message on the order asking to reverse the no-show, and
+tells the ops number. The correction itself is `change_order_status` →
+`approved` (`BH_SHOW_STATUS`), the same call the office makes by hand; the
+back-office message is the audit trail, and asks for manual handling if that
+call failed.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

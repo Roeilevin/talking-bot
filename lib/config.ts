@@ -34,6 +34,10 @@ export const config = {
       production: { baseUrl: BH_PROD_BASE, apiKey: BH_PROD_KEY },
       test: { baseUrl: BH_TEST_BASE, apiKey: BH_TEST_KEY },
     } as Record<BhEnv, { baseUrl: string; apiKey: string }>,
+    // Order status that un-does a no-show, sent to change_order_status when a
+    // guide reports the traveller did join after all. `approved` is the value
+    // BH takes an order back to; overridable in case that ever changes.
+    showStatus: process.env.BH_SHOW_STATUS || "approved",
   },
   telnyx: {
     apiKey: process.env.TELNYX_API_KEY || "",

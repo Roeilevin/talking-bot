@@ -1,0 +1,3 @@
+{
+  "_comment": "Exact pickup meeting-point addresses, keyed by area name exactly as it appears in areas.json (e.g. \"Tel Aviv\", \"Jerusalem\", \"Herzliya\"). The Bein Harim API gives the pickup area and departure time but not the street address; anything added here is spoken to callers as the meeting point. Leave an area out and callers hear the city and time only. Keys starting with _ are ignored."
+}

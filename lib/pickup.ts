@@ -1,5 +1,17 @@
 // Helpers for the "I can't find the pickup" inbound scenario.
 
+// Pickup answers given BEFORE there is a booking are provisional: Bein Harim
+// sets the meeting point and departure time per departure, and the traveler's
+// own final pickup is confirmed on their order confirmation. Every quote of a
+// tour-level pickup carries this, so nobody plans a morning around a time we
+// only half-promised. (A booked order's own pickup does not — that IS the
+// confirmed one.)
+export const PICKUP_MAY_CHANGE_SPOKEN =
+  "Please note the pickup point and time can still change — your final pickup location and time will be confirmed in your order confirmation.";
+
+export const PICKUP_MAY_CHANGE_WRITTEN =
+  "Please note: pickup points and times may change. Your final pickup location and pickup time will be sent to you in your order confirmation.";
+
 export function buildMapsLink(hotel: string, city: string): string {
   const query = [hotel, city].filter(Boolean).join(", ");
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;

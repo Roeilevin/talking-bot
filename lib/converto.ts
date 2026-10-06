@@ -44,6 +44,54 @@ export async function sendWhatsAppMessage(
   return json.message_id;
 }
 
+
+export interface QuickReplyButton {
+  id: string;
+  title: string;
+}
+
+// Body text plus up to 3 tappable quick-reply buttons. SESSION ONLY: Meta
+// allows interactive messages just inside the 24h customer-service window, so
+// this can never replace a template for a business-initiated send — it is what
+// we reach for once the window is open (or as a better-than-plain-text fallback
+// when a template is refused). The tap comes back as an inbound message whose
+// button id is the one passed here.
+export async function sendWhatsAppButtons(
+  to: string,
+  text: string,
+  buttons: QuickReplyButton[],
+  meta: SendMeta = {}
+): Promise<string> {
+  const res = await fetch(`${BASE_URL}/messages/interactive`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${config.converto.apiKey}`,
+    },
+    body: JSON.stringify({
+      to,
+      text,
+      buttons: buttons.map((b) => ({ id: b.id, title: b.title, type: "reply" })),
+    }),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Converto interactive API error: ${res.status} ${body}`);
+  }
+
+  const json = await res.json();
+  await insertWhatsAppSend({
+    recipient: to,
+    direction: meta.direction ?? null,
+    kind: meta.kind ?? "buttons",
+    text,
+    channel: "interactive",
+    order_number: meta.orderNumber ?? null,
+  });
+  return json.message_id;
+}
+
 // WhatsApp forbids newlines/tabs and long space runs inside template variables.
 function sanitizeParam(v: unknown): string {
   return String(v ?? "").replace(/\s+/g, " ").trim();

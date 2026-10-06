@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { notifyTeam } from "@/lib/converto";
 import { getOrderDetails, markOrderNoShow } from "@/lib/bein-harim";
+import { alertGuideOfNoShow, describeGuideAlert } from "@/lib/guide-alert";
 import { startAssistantCall } from "@/lib/telnyx";
 import {
   insertCall,
@@ -135,12 +136,19 @@ export async function POST(req: NextRequest) {
       } catch (e) {
         console.error("[Telnyx Webhook] auto no-show failed", e);
       }
+      // Reached only on the automatic path: the assistant's own mark_noshow
+      // tool alerts the guide itself, so this is the counterpart for a customer
+      // who never answered at all.
+      const guideAlert = marked
+        ? await alertGuideOfNoShow(Number(orderNumber))
+        : null;
       await notifyTeam(
         teamPhone,
         `❌ ${who}: ${reasonText} גם לאחר ${attempt} ניסיונות.` +
           (marked
             ? " ההזמנה סומנה כאי-הגעה (no-show)."
-            : " סימון אי-הגעה נכשל — נא לטפל ידנית.")
+            : " סימון אי-הגעה נכשל — נא לטפל ידנית.") +
+          (guideAlert ? describeGuideAlert(guideAlert) : "")
       );
       return NextResponse.json({ ok: true, no_show: marked });
     }
