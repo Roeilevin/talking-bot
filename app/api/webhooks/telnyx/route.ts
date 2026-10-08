@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { notifyTeam } from "@/lib/converto";
-import { getOrderDetails, markOrderNoShow } from "@/lib/bein-harim";
+import { addOrderComment, getOrderDetails, markOrderNoShow } from "@/lib/bein-harim";
 import { alertGuideOfNoShow, describeGuideAlert } from "@/lib/guide-alert";
 import { startAssistantCall } from "@/lib/telnyx";
 import {
@@ -142,6 +142,14 @@ export async function POST(req: NextRequest) {
       const guideAlert = marked
         ? await alertGuideOfNoShow(Number(orderNumber))
         : null;
+      // Same "For office" note the mark_noshow tool writes, so the office sees
+      // the no-show on the order itself, not only in WhatsApp.
+      if (marked) {
+        await addOrderComment(
+          Number(orderNumber),
+          `❌ ${who}: ${reasonText} גם לאחר ${attempt} ניסיונות — סומן כאי-הגעה (no-show).`
+        );
+      }
       await notifyTeam(
         teamPhone,
         `❌ ${who}: ${reasonText} גם לאחר ${attempt} ניסיונות.` +

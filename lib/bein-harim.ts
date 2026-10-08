@@ -242,7 +242,11 @@ export async function setOrderStatus(
   orderId: number,
   orderStatus: string
 ): Promise<void> {
-  const json = await bhRequest(`/booking/change_order_status`, {
+  const json = await bhRequest<{
+    success?: boolean;
+    order_status?: number | null;
+    previous_order_status?: number | null;
+  }>(`/booking/change_order_status`, {
     method: "POST",
     body: JSON.stringify({
       order_id: orderId,
@@ -250,7 +254,14 @@ export async function setOrderStatus(
     }),
   });
 
-  if (json.error || json.status >= 400) {
+  // Prod order_details doesn't expose the status, so this log line is the only
+  // record of what BH actually did (e.g. 4 → 9 for non_show).
+  console.log(
+    `[BH] change_order_status order=${orderId} → ${orderStatus}: ${json.status} ` +
+      `success=${json.data?.success} ${json.data?.previous_order_status} → ${json.data?.order_status}`
+  );
+
+  if (json.error || json.status >= 400 || json.data?.success === false) {
     throw new Error(
       `Bein Harim API error: ${json.status} ${describeBhError(json.error) || "request failed"}`
     );
