@@ -29,7 +29,11 @@ export async function POST(req: NextRequest) {
     const guideAlert = await alertGuideOfNoShow(Number(order_id));
 
     const who = `הזמנה ${order_id}${customer_name ? ` – ${customer_name}` : ""}`;
-    await addOrderComment(Number(order_id), `❌ ${who}: הלקוח אמר שלא יגיע — סומן כאי-הגעה (no-show).`);
+    await addOrderComment(
+      Number(order_id),
+      `❌ ${who}: הלקוח אמר שלא יגיע. ההזמנה סומנה כאי-הגעה (no-show).` +
+        describeGuideAlert(guideAlert).replace("\n", " ")
+    );
     await notifyTeam(
       team_phone,
       `❌ ${who}: סומן כאי-הגעה (no-show).${describeGuideAlert(guideAlert)}`

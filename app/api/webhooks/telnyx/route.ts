@@ -147,7 +147,8 @@ export async function POST(req: NextRequest) {
       if (marked) {
         await addOrderComment(
           Number(orderNumber),
-          `❌ ${who}: ${reasonText} גם לאחר ${attempt} ניסיונות — סומן כאי-הגעה (no-show).`
+          `❌ ${who}: ${reasonText} גם לאחר ${attempt} ניסיונות. ההזמנה סומנה כאי-הגעה (no-show).` +
+            (guideAlert ? describeGuideAlert(guideAlert).replace("\n", " ") : "")
         );
       }
       await notifyTeam(
