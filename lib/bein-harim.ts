@@ -220,17 +220,23 @@ export async function sendCheckoutNotification(
 // the customer said without opening WhatsApp. Best-effort: never throws, so a
 // BH hiccup (or an env without the endpoint yet) can't break the live call.
 export async function addOrderComment(orderId: number, text: string): Promise<boolean> {
-  // Stamp every note with the Israel wall-clock time it was written.
-  const time = new Intl.DateTimeFormat("en-GB", {
+  // Stamp every note with the Israel wall-clock date + time it was written,
+  // e.g. "11/10/2026 12:28" (en-GB puts a comma between them — dropped).
+  const stamp = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Jerusalem",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-  }).format(new Date());
+  })
+    .format(new Date())
+    .replace(",", "");
   try {
     const json = await bhRequest(`/booking/order_comment/${orderId}`, {
       method: "POST",
-      body: JSON.stringify({ text: `${text} שעת ביצוע ${time}` }),
+      body: JSON.stringify({ text: `${text} תאריך ושעת ביצוע ${stamp}` }),
     });
     if (json.error || json.status >= 400) {
       throw new Error(`${json.status} ${describeBhError(json.error) || "request failed"}`);
