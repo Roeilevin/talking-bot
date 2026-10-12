@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { addOrderComment, sendCheckoutNotification } from "@/lib/bein-harim";
-import { insertWhatsAppSend } from "@/lib/db";
+import { insertWhatsAppSend, updateCallOutcome } from "@/lib/db";
 
 // Called by the Telnyx AI assistant to forward a customer's request/message to
 // the Bein Harim back office. Posts to the BH checkout_notification endpoint so
@@ -24,6 +24,9 @@ export async function POST(req: NextRequest) {
     // Comment first (best-effort): it is the record on the order itself, and
     // must land even if the bell notification below fails.
     await addOrderComment(Number(order_id), String(message));
+    // The customer engaged — record it, or the Telnyx webhook reads the call as
+    // "picked up, said nothing", redials, and auto-marks the order no-show.
+    await updateCallOutcome(Number(order_id), "office", String(message).slice(0, 300));
     const { office_message_id } = await sendCheckoutNotification(
       Number(order_id),
       String(message)

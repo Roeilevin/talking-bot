@@ -236,7 +236,10 @@ export async function addOrderComment(orderId: number, text: string): Promise<bo
   try {
     const json = await bhRequest(`/booking/order_comment/${orderId}`, {
       method: "POST",
-      body: JSON.stringify({ text: `${text} תאריך ושעת ביצוע ${stamp}` }),
+      // BH stores 4-byte UTF-8 (emoji like 👤 📞 🙋) as "????" — drop them.
+      body: JSON.stringify({
+        text: `${text.replace(/[\u{10000}-\u{10FFFF}]/gu, "").replace(/ {2,}/g, " ")} תאריך ושעת ביצוע ${stamp}`,
+      }),
     });
     if (json.error || json.status >= 400) {
       throw new Error(`${json.status} ${describeBhError(json.error) || "request failed"}`);
