@@ -214,21 +214,22 @@ export async function insertWhatsAppSend(input: NewWhatsAppSend): Promise<void> 
   }
 }
 
-// Order number of the most recent WhatsApp send of `kind` to this recipient.
-// Used to answer "which order is this guide replying about?" — the guide alert
-// is logged with the order number, so the reply needs no state of its own.
-// Returns null when nothing matches, when Supabase is unavailable, or when the
-// send is older than `withinHours` (a tap on last week's message must not
-// re-open a closed order).
-export async function findRecentSendOrder(
+// Distinct order numbers of WhatsApp sends of `kind` to this recipient, newest
+// first. Used to answer "which order is this guide replying about?" — the guide
+// alert is logged with the order number, so the reply needs no state of its
+// own. More than one hit means a guide with several alerts open: a quick-reply
+// tap can't say which, so the caller must not guess. Empty when nothing
+// matches, when Supabase is unavailable, or when the send is older than
+// `withinHours` (a tap on last week's message must not re-open a closed order).
+export async function findRecentSendOrders(
   recipient: string,
   kind: string,
   withinHours = 24
-): Promise<number | null> {
+): Promise<number[]> {
   const sb = db();
-  if (!sb) return null;
+  if (!sb) return [];
   const target = normalizePhone(recipient);
-  if (!target) return null;
+  if (!target) return [];
   try {
     const since = new Date(Date.now() - withinHours * 3600_000).toISOString();
     const { data, error } = await sb
@@ -240,14 +241,16 @@ export async function findRecentSendOrder(
       .limit(200);
     if (error) throw error;
     // Recipients are stored as sent, so normalize both sides before comparing.
-    const hit = (data ?? []).find(
-      (r: { recipient: string; order_number: number | null }) =>
-        normalizePhone(r.recipient) === target && r.order_number != null
-    );
-    return (hit?.order_number as number | undefined) ?? null;
+    const orders = (data ?? [])
+      .filter(
+        (r: { recipient: string; order_number: number | null }) =>
+          normalizePhone(r.recipient) === target && r.order_number != null
+      )
+      .map((r: { order_number: number }) => r.order_number);
+    return [...new Set<number>(orders)];
   } catch (e) {
-    console.error("[db] findRecentSendOrder failed", e);
-    return null;
+    console.error("[db] findRecentSendOrders failed", e);
+    return [];
   }
 }
 

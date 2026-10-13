@@ -14,7 +14,7 @@ import {
 } from "@/lib/guide-alert";
 import { startAssistantCall } from "@/lib/telnyx";
 import {
-  findRecentSendOrder,
+  findRecentSendOrders,
   insertCall,
   isPhoneAllowed,
   updateCallOutcome,
@@ -70,6 +70,10 @@ interface InboundMessage {
   text?: string | { body?: string };
   button?: { text?: string; payload?: string };
   interactive?: { button_reply?: { id?: string; title?: string } };
+  // message_sent only: the guide the office was writing to, and (on a swipe-
+  // reply) the message they replied to — usually the no-show alert itself.
+  to?: string;
+  quoted?: { direction?: string; text?: string };
 }
 
 // The button's machine id, when the tap carried one. Read separately from the
@@ -99,21 +103,42 @@ function readMessageText(message: InboundMessage): string {
 // — the same call the office would make by hand. A back-office message goes out
 // alongside it as the audit trail, and carries the "do this manually" ask if the
 // status change failed.
+//
+// The office can make the same report: replying "התייר הצטרף" to the alert from
+// the inbox / WhatsApp Business app reaches us as a `message_sent` echo. Then
+// `senderPhone` is the guide it was sent to, and the guide gets no ack — the
+// office's own message already is one.
 async function handleGuideJoined(
   senderPhone: string,
   replyText: string,
-  fromPayload: number | null
+  fromPayload: number | null,
+  by: "guide" | "office" = "guide"
 ): Promise<NextResponse> {
+  const reporter = by === "office" ? "המשרד" : "המדריך";
   // An interactive button carries the order in its id, so it needs no lookup.
   // A template quick reply carries only its text — then fall back to the alert
   // we sent this number (logged with the order number).
-  const orderNumber =
-    fromPayload ??
-    (await findRecentSendOrder(
-      senderPhone,
-      GUIDE_NOSHOW_KIND,
-      GUIDE_REPLY_WINDOW_HOURS
-    ));
+  const candidates =
+    fromPayload != null
+      ? [fromPayload]
+      : await findRecentSendOrders(senderPhone, GUIDE_NOSHOW_KIND, GUIDE_REPLY_WINDOW_HOURS);
+
+  // Several alerts open for this guide and a tap that can't say which: reverting
+  // the newest one guesses, and a wrong guess approves a real no-show. Hand it
+  // to a human with the candidates instead.
+  if (candidates.length > 1) {
+    console.warn(
+      `[Converto Webhook] guide-joined from ${senderPhone} is ambiguous: ${candidates.join(", ")}`
+    );
+    await bestEffort("guide-joined ambiguous notice", () =>
+      notifyTeam(
+        undefined,
+        `👤 ${reporter} (${senderPhone}) דיווח "${replyText}", אך למדריך נשלחו כמה התראות אי-הגעה (${candidates.join(", ")}) ולא ניתן לזהות לאיזו הזמנה הכוונה — נא לעדכן ידנית את ההזמנה הנכונה.`
+      )
+    );
+    return NextResponse.json({ ok: true, reason: "guide_joined_ambiguous", candidates });
+  }
+  const orderNumber = candidates[0];
 
   if (!orderNumber) {
     console.warn(
@@ -122,10 +147,10 @@ async function handleGuideJoined(
     await bestEffort("guide-joined unmatched notice", () =>
       notifyTeam(
         undefined,
-        `👤 מדריך (${senderPhone}) דיווח "${replyText}" אך לא נמצאה התראת אי-הגעה מתאימה מ-24 השעות האחרונות — נא לטפל ידנית.`
+        `👤 ${reporter} (${senderPhone}) דיווח "${replyText}" אך לא נמצאה התראת אי-הגעה מתאימה מ-24 השעות האחרונות — נא לטפל ידנית.`
       )
     );
-    await bestEffort("guide-joined unmatched reply", () =>
+    if (by === "guide") await bestEffort("guide-joined unmatched reply", () =>
       sendWhatsAppMessage(
         senderPhone,
         "לא הצלחנו לזהות לאיזו הזמנה ההודעה מתייחסת. נא לפנות למשרד עם מספר ההזמנה."
@@ -136,7 +161,7 @@ async function handleGuideJoined(
 
   // Correct the dashboard first: it is the record that survives a messaging
   // failure, and "coming" is exactly what the guide is reporting.
-  await updateCallOutcome(orderNumber, "coming", `המדריך דיווח: ${replyText}`);
+  await updateCallOutcome(orderNumber, "coming", `${reporter} דיווח: ${replyText}`);
 
   // Put the order back the way it was BEFORE telling anyone: the status is the
   // thing that decides whether the traveller is treated as a no-show, and the
@@ -164,8 +189,8 @@ async function handleGuideJoined(
     await sendCheckoutNotification(
       orderNumber,
       statusReverted
-        ? `המדריך דיווח שהנוסע הצטרף לטיול בפועל — סטטוס ההזמנה הוחזר ל-${config.beinHarim.showStatus}.`
-        : `המדריך דיווח שהנוסע הצטרף לטיול בפועל — החזרת הסטטוס נכשלה${
+        ? `${reporter} דיווח שהנוסע הצטרף לטיול בפועל — סטטוס ההזמנה הוחזר ל-${config.beinHarim.showStatus}.`
+        : `${reporter} דיווח שהנוסע הצטרף לטיול בפועל — החזרת הסטטוס נכשלה${
             revertError ? ` (${revertError})` : ""
           }, יש לבטל את סימון אי-ההגעה (no-show) בהזמנה ${orderNumber} ידנית.`
     );
@@ -173,13 +198,15 @@ async function handleGuideJoined(
   });
 
   console.log(
-    `[Guide Joined] order=${orderNumber} guide=${senderPhone} office=${officeNotified} status_reverted=${statusReverted}`
+    `[Guide Joined] by=${by} order=${orderNumber} guide=${senderPhone} office=${officeNotified} status_reverted=${statusReverted}`
   );
 
   await bestEffort("guide-joined ops notice", () =>
     notifyTeam(
       undefined,
-      `✅ הזמנה ${orderNumber}: המדריך (${senderPhone}) דיווח שהתייר הצטרף לטיול.` +
+      `✅ הזמנה ${orderNumber}: ${
+        by === "office" ? "המשרד (בשיחה עם המדריך " : "המדריך ("
+      }${senderPhone}) דיווח שהתייר הצטרף לטיול.` +
         (statusReverted
           ? alreadyThere
             ? ` סטטוס ההזמנה כבר היה ${config.beinHarim.showStatus} — לא נדרש שינוי.`
@@ -192,7 +219,7 @@ async function handleGuideJoined(
     )
   );
 
-  await bestEffort("guide-joined ack", () =>
+  if (by === "guide") await bestEffort("guide-joined ack", () =>
     sendWhatsAppMessage(
       senderPhone,
       `תודה! עדכנו שהתייר הצטרף לטיול בהזמנה ${orderNumber}.`,
@@ -222,7 +249,35 @@ export async function POST(req: NextRequest) {
 
     console.log(`[Converto Webhook] Event: ${eventType}`, rawBody);
 
-    // Only handle inbound messages
+    // The office marking the traveller as joined from the inbox / WhatsApp app.
+    // Our own API sends (origin public_api) echo here too and are ignored.
+    if (eventType === "message_sent") {
+      const sent: InboundMessage | undefined = body.message;
+      if (!sent?.to || (body.origin !== "inbox" && body.origin !== "whatsapp_app")) {
+        return NextResponse.json({ ok: true });
+      }
+      // The office usually taps the alert's own quick-reply button in the
+      // WhatsApp app: that echo has text null and the button only in meta_raw.
+      const text =
+        readMessageText(sent) || String(body.meta_raw?.button?.text ?? "").trim();
+      if (!readGuideJoined(text).joined) {
+        return NextResponse.json({ ok: true });
+      }
+      // A swipe-reply to the alert names the order in the quoted text;
+      // otherwise fall back to the latest alert sent to that guide.
+      const quotedOrder =
+        sent.quoted?.direction === "outbound"
+          ? sent.quoted.text?.match(/(?<!\d)(\d{6})(?!\d)/)?.[1]
+          : undefined;
+      return await handleGuideJoined(
+        sent.to,
+        text,
+        quotedOrder ? Number(quotedOrder) : null,
+        "office"
+      );
+    }
+
+    // Otherwise only handle inbound messages
     if (eventType !== "message") {
       return NextResponse.json({ ok: true });
     }

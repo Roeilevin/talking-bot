@@ -11,7 +11,7 @@ import { alreadySent, markSent, releaseSend, sendKey } from "./send-once";
 // links an inbound button reply back to an order: the send is logged in
 // talking_bot_whatsapp_sends with this kind + the order number, so the Converto
 // webhook can resolve "who tapped the button" without a new table (see
-// findRecentSendOrder in lib/db.ts).
+// findRecentSendOrders in lib/db.ts).
 export const GUIDE_NOSHOW_KIND = "guide_noshow_alert";
 export const GUIDE_NOSHOW_TEMPLATE = "guide_noshow_alert";
 export const GUIDE_NOSHOW_TEMPLATE_LANG = "he";
@@ -22,8 +22,10 @@ export const GUIDE_NOSHOW_TEMPLATE_LANG = "he";
 export const GUIDE_JOINED_BUTTON = "התייר הצטרף";
 
 // Tolerate the near-misses of a guide who typed the answer instead of tapping:
-// quotes, trailing punctuation, and the two other obvious phrasings.
+// quotes, trailing punctuation, the two other obvious phrasings, and a bare
+// "כן הצטרף" (what a guide actually typed when the office asked).
 const JOINED_PATTERNS = [
+  /^כן\s+(?:(?:התייר|הנוסע)\s+)?(?:הצטרף|הגיע)$/,
   /^התייר\s+הצטרף$/,
   /^התייר\s+הגיע$/,
   /^הנוסע\s+הצטרף$/,
